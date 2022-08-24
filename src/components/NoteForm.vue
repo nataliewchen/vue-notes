@@ -12,7 +12,12 @@
     </div>
     <div class="form-control">
       <label for="text" hidden>Text:</label>
-      <textarea rows="5" v-model="text" required></textarea>
+      <textarea
+        rows="5"
+        v-model="text"
+        placeholder="Type your note here..."
+        required
+      ></textarea>
     </div>
     <button class="btn-green">save</button>
   </form>
@@ -26,7 +31,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "NoteForm",
   components: {},
-  props: ["noteToEdit", "isEditing"],
+  props: ["noteToEdit"],
   emits: ["edit-note", "add-note"],
   data() {
     return {
@@ -34,7 +39,13 @@ export default defineComponent({
       text: "",
       id: Number,
       lastUpdated: Date,
+      pinned: false,
     };
+  },
+  computed: {
+    isEditing() {
+      return Object.entries(this.noteToEdit).length > 0;
+    },
   },
   watch: {
     noteToEdit(newNote) {
@@ -42,6 +53,7 @@ export default defineComponent({
       this.text = newNote.text;
       this.id = newNote.id;
       this.lastUpdated = newNote.lastUpdated;
+      this.pinned = newNote.pinned;
     },
   },
   methods: {
@@ -51,6 +63,7 @@ export default defineComponent({
         text: this.text,
         id: this.isEditing ? this.id : Date.now(), // keep same id if editing existing note
         lastUpdated: new Date(),
+        pinned: this.pinned,
       };
 
       this.title = "";
@@ -69,6 +82,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 form {
   text-align: center;
+  margin-bottom: 50px;
 }
 .form-control {
   margin-bottom: 10px;
@@ -77,10 +91,18 @@ form {
   textarea {
     width: 100%;
     max-width: 400px;
+    font-family: inherit;
+    padding: 8px;
+  }
+
+  textarea {
+    resize: none;
+    font-size: 1em;
   }
 }
 
 #title {
   font-size: 1.2em;
+  font-weight: 600;
 }
 </style>

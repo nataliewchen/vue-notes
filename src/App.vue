@@ -10,13 +10,13 @@
       v-show="showForm"
       @add-note="addNote"
       @edit-note="editNote"
-      :isEditing="isEditing"
       :noteToEdit="noteToEdit"
     />
     <NotesList
       :notes="notes"
       @get-edit-note-form="getEditNoteForm"
       @confirm-delete="confirmDelete"
+      @toggle-pin="togglePin"
     />
   </div>
 </template>
@@ -33,6 +33,7 @@ interface Note {
   text: string;
   id: number;
   lastUpdated: Date;
+  pinned: boolean;
 }
 
 export default defineComponent({
@@ -46,17 +47,19 @@ export default defineComponent({
           title: "hello",
           text: "nice to meet u",
           id: 1,
-          lastUpdated: new Date(),
+          lastUpdated: new Date("December 17, 1995 03:24:00"),
+          pinned: false,
         },
         {
           title: "psych",
           text: "i've heard it both ways",
           id: 13,
           lastUpdated: new Date(),
+          pinned: false,
         },
       ],
+      pinned: [] as Note[],
       noteToEdit: {},
-      isEditing: false,
       showForm: false,
       showModal: false,
       noteIdToDelete: 0,
@@ -72,7 +75,6 @@ export default defineComponent({
       );
 
       this.noteToEdit = {};
-      this.isEditing = false;
     },
     deleteNote() {
       this.notes = this.notes.filter((note) => note.id !== this.noteIdToDelete);
@@ -83,12 +85,12 @@ export default defineComponent({
       const note = this.notes.find((note) => note.id === id);
       if (note) {
         this.noteToEdit = note;
-        this.isEditing = true;
         this.showForm = true;
       }
     },
     toggleForm() {
       this.showForm = !this.showForm;
+      this.noteToEdit = {};
     },
     confirmDelete(id: number) {
       this.noteIdToDelete = id;
@@ -96,6 +98,11 @@ export default defineComponent({
     },
     closeModal() {
       this.showModal = false;
+    },
+    togglePin(id: number) {
+      this.notes = this.notes.map((note) =>
+        note.id === id ? { ...note, pinned: !note.pinned } : note
+      );
     },
   },
 });

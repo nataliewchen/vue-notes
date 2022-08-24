@@ -1,6 +1,7 @@
 <template>
   <header>
     <h1>notes</h1>
+
     <!-- how to dynamically bind to btn based on showForm? -->
     <IconButton
       class="btn-toggle"

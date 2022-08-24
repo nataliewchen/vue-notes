@@ -1,9 +1,12 @@
 <template>
   <div class="note">
     <div class="content">
-      <h3>{{ note.title }}</h3>
+      <h2>
+        <i v-show="note.pinned" class="fa-solid fa-thumbtack"></i>
+        {{ note.title }}
+        <span class="last-updated"> | {{ lastUpdated }}</span>
+      </h2>
       <p>{{ note.text }}</p>
-      <p>{{ lastUpdated }}</p>
     </div>
     <div class="btn-group">
       <IconButton
@@ -25,16 +28,16 @@ export default defineComponent({
   name: "NoteItem",
   components: { IconButton },
   props: ["note"],
-  emits: ["get-edit-note-form", "confirm-delete"],
+  emits: ["toggle-pin", "get-edit-note-form", "confirm-delete"],
   data() {
     return {
       buttons: [
-        // {
-        //   type: "pin",
-        //   color: "orange",
-        //   icon: "fa-thumbtack",
-        //   emit: "pin-note",
-        // },
+        {
+          type: "pin",
+          color: this.note.pinned ? "gray" : "orange",
+          icon: "fa-thumbtack",
+          emit: "toggle-pin",
+        },
         {
           type: "edit",
           color: "rgb(36, 120, 199)",
@@ -61,14 +64,32 @@ export default defineComponent({
 <style scoped lang="scss">
 .note {
   background-color: rgb(231, 231, 231);
-  padding: 10px;
-  margin: 5px 10px;
+  padding: 15px;
+  margin: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
-  h3,
+  h2,
   p {
     margin: 0;
+  }
+
+  h2 {
+    display: flex;
+    align-items: center;
+  }
+
+  .fa-thumbtack {
+    font-size: 0.7em;
+    margin-right: 10px;
+  }
+
+  .last-updated {
+    font-weight: 300;
+    font-size: 0.65em;
+
+    margin: 0 8px;
   }
 }
 </style>
