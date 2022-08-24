@@ -3,7 +3,7 @@
     <NoteItem
       :note="note"
       @get-edit-note-form="$emit('get-edit-note-form', note.id)"
-      @delete-note="$emit('delete-note', note.id)"
+      @confirm-delete="$emit('confirm-delete', note.id)"
     />
   </div>
 </template>
@@ -16,7 +16,7 @@ export default defineComponent({
   name: "NotesList",
   components: { NoteItem },
   props: ["notes"],
-  emits: ["get-edit-note-form", "delete-note"],
+  emits: ["get-edit-note-form", "confirm-delete"],
 });
 </script>
 

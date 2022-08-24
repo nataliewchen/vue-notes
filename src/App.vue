@@ -1,7 +1,13 @@
 <template>
+  <ConfirmationModal
+    @close-modal="closeModal"
+    @delete-note="deleteNote"
+    v-show="showModal"
+  />
   <div class="container">
-    <AppHeader />
+    <AppHeader :showForm="showForm" @toggle-form="toggleForm" />
     <NoteForm
+      v-show="showForm"
       @add-note="addNote"
       @edit-note="editNote"
       :isEditing="isEditing"
@@ -10,7 +16,7 @@
     <NotesList
       :notes="notes"
       @get-edit-note-form="getEditNoteForm"
-      @delete-note="deleteNote"
+      @confirm-delete="confirmDelete"
     />
   </div>
 </template>
@@ -20,16 +26,18 @@ import { defineComponent } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import NoteForm from "./components/NoteForm.vue";
 import NotesList from "./components/NotesList.vue";
+import ConfirmationModal from "./components/ConfirmationModal.vue";
 
 interface Note {
   title: string;
   text: string;
   id: number;
+  lastUpdated: Date;
 }
 
 export default defineComponent({
   name: "App",
-  components: { AppHeader, NotesList, NoteForm },
+  components: { AppHeader, NotesList, NoteForm, ConfirmationModal },
   data() {
     return {
       // notes: [] as Note[],
@@ -38,10 +46,20 @@ export default defineComponent({
           title: "hello",
           text: "nice to meet u",
           id: 1,
+          lastUpdated: new Date(),
+        },
+        {
+          title: "psych",
+          text: "i've heard it both ways",
+          id: 13,
+          lastUpdated: new Date(),
         },
       ],
       noteToEdit: {},
       isEditing: false,
+      showForm: false,
+      showModal: false,
+      noteIdToDelete: 0,
     };
   },
   methods: {
@@ -56,15 +74,28 @@ export default defineComponent({
       this.noteToEdit = {};
       this.isEditing = false;
     },
-    deleteNote(id: number) {
-      this.notes = this.notes.filter((note) => note.id !== id);
+    deleteNote() {
+      this.notes = this.notes.filter((note) => note.id !== this.noteIdToDelete);
+      this.noteIdToDelete = 0;
+      this.closeModal();
     },
     getEditNoteForm(id: number) {
       const note = this.notes.find((note) => note.id === id);
       if (note) {
         this.noteToEdit = note;
-        this.isEditing = !this.isEditing;
+        this.isEditing = true;
+        this.showForm = true;
       }
+    },
+    toggleForm() {
+      this.showForm = !this.showForm;
+    },
+    confirmDelete(id: number) {
+      this.noteIdToDelete = id;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
     },
   },
 });
@@ -76,6 +107,7 @@ $base: #2c3e50;
 
 body {
   overflow-y: scroll;
+  margin: 0;
 }
 
 #app {
@@ -83,12 +115,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 .container {
   border: 2px solid $base;
-  margin: 0 auto;
+  margin: 50px auto;
   max-width: 600px;
   padding: 20px;
 }
@@ -100,6 +131,11 @@ button {
   cursor: pointer;
   color: white;
   background-color: darkslategray;
+  font-family: inherit;
+}
+
+button:hover {
+  scale: 1.05;
 }
 
 .btn-group {
@@ -110,5 +146,14 @@ button {
 
 .btn-green {
   background-color: rgb(46, 155, 46);
+}
+
+.btn-cancel {
+  background-color: gray;
+}
+
+.btn-toggle {
+  width: 40px;
+  height: 40px;
 }
 </style>

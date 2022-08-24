@@ -3,13 +3,14 @@
     <div class="content">
       <h3>{{ note.title }}</h3>
       <p>{{ note.text }}</p>
+      <p>{{ lastUpdated }}</p>
     </div>
     <div class="btn-group">
-      <NoteButton
+      <IconButton
         v-for="btn of buttons"
         :key="btn.type"
         :btn="btn"
-        @btn-click="$emit(btn.emit, note.id)"
+        @click="$emit(btn.emit, note.id)"
       />
     </div>
   </div>
@@ -17,16 +18,23 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NoteButton from "./NoteButton.vue";
+import IconButton from "./IconButton.vue";
+import dayjs from "dayjs";
 
 export default defineComponent({
   name: "NoteItem",
-  components: { NoteButton },
+  components: { IconButton },
   props: ["note"],
-  emits: ["get-edit-note-form", "delete-note"],
+  emits: ["get-edit-note-form", "confirm-delete"],
   data() {
     return {
       buttons: [
+        // {
+        //   type: "pin",
+        //   color: "orange",
+        //   icon: "fa-thumbtack",
+        //   emit: "pin-note",
+        // },
         {
           type: "edit",
           color: "rgb(36, 120, 199)",
@@ -37,10 +45,15 @@ export default defineComponent({
           type: "delete",
           color: "rgb(192, 59, 59)",
           icon: "fa-trash-can",
-          emit: "delete-note",
+          emit: "confirm-delete",
         },
       ],
     };
+  },
+  computed: {
+    lastUpdated() {
+      return dayjs(this.note.lastUpdated).format("MM/DD/YYYY, h:mma");
+    },
   },
 });
 </script>

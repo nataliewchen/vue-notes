@@ -1,5 +1,5 @@
 <template>
-  <button @click="$emit('btn-click')" :style="{ backgroundColor: btn.color }">
+  <button :style="{ backgroundColor: btn.color }">
     <i :class="['fa-solid', btn.icon]"></i>
   </button>
 </template>

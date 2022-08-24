@@ -33,6 +33,7 @@ export default defineComponent({
       title: "",
       text: "",
       id: Number,
+      lastUpdated: Date,
     };
   },
   watch: {
@@ -40,6 +41,7 @@ export default defineComponent({
       this.title = newNote.title;
       this.text = newNote.text;
       this.id = newNote.id;
+      this.lastUpdated = newNote.lastUpdated;
     },
   },
   methods: {
@@ -48,6 +50,7 @@ export default defineComponent({
         title: this.title,
         text: this.text,
         id: this.isEditing ? this.id : Date.now(), // keep same id if editing existing note
+        lastUpdated: new Date(),
       };
 
       this.title = "";
