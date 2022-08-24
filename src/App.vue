@@ -1,5 +1,5 @@
 <template>
-  <ConfirmationModal
+  <ConfirmDeleteModal
     @close-modal="closeModal"
     @delete-note="deleteNote"
     v-show="showModal"
@@ -26,7 +26,7 @@ import { defineComponent } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import NoteForm from "./components/NoteForm.vue";
 import NotesList from "./components/NotesList.vue";
-import ConfirmationModal from "./components/ConfirmationModal.vue";
+import ConfirmDeleteModal from "./components/ConfirmDeleteModal.vue";
 
 interface Note {
   title: string;
@@ -38,7 +38,7 @@ interface Note {
 
 export default defineComponent({
   name: "App",
-  components: { AppHeader, NotesList, NoteForm, ConfirmationModal },
+  components: { AppHeader, NotesList, NoteForm, ConfirmDeleteModal },
   data() {
     return {
       // notes: [] as Note[],
@@ -47,7 +47,7 @@ export default defineComponent({
           title: "hello",
           text: "nice to meet u",
           id: 1,
-          lastUpdated: new Date("December 17, 1995 03:24:00"),
+          lastUpdated: new Date(),
           pinned: false,
         },
         {
@@ -70,10 +70,10 @@ export default defineComponent({
       this.notes = [newNote, ...this.notes];
     },
     editNote(editedNote: Note) {
-      this.notes = this.notes.map((note) =>
-        note.id === editedNote.id ? editedNote : note
-      );
-
+      this.notes = [
+        editedNote,
+        ...this.notes.filter((note) => note.id !== editedNote.id),
+      ];
       this.noteToEdit = {};
     },
     deleteNote() {
@@ -104,6 +104,17 @@ export default defineComponent({
         note.id === id ? { ...note, pinned: !note.pinned } : note
       );
     },
+  },
+  watch: {
+    notes(newNotes) {
+      localStorage.setItem("notes", JSON.stringify(newNotes));
+    },
+  },
+  mounted() {
+    const localNotes = localStorage.getItem("notes");
+    if (localNotes) {
+      this.notes = JSON.parse(localNotes);
+    }
   },
 });
 </script>

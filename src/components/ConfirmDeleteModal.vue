@@ -1,6 +1,6 @@
 <template>
   <div class="backdrop">
-    <div class="modal">
+    <div class="confirm-delete-modal">
       <h3>Are you sure you want to delete this note?</h3>
       <div class="btn-group">
         <button @click="$emit('close-modal')" class="btn-cancel">Cancel</button>
@@ -21,7 +21,7 @@ export default defineComponent({
 
 
 <style lang="scss" scoped>
-.modal {
+.confirm-delete-modal {
   position: absolute;
   width: 50%;
   left: 50%;
