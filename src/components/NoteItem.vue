@@ -5,6 +5,7 @@
         <h2>
           <i v-show="note.pinned" class="fa-solid fa-thumbtack"></i>
           {{ note.title }}
+
           <span class="last-updated"> | {{ lastUpdated }}</span>
         </h2>
       </div>
@@ -13,7 +14,7 @@
           v-for="btn in buttons"
           :key="btn.type"
           :btn="btn"
-          @click="$emit(btn.emit, note.id)"
+          @click.stop="$emit(btn.emit, note.id)"
         />
       </div>
     </div>
@@ -96,6 +97,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 5px;
 }
 
 .full-text {
@@ -127,7 +129,6 @@ h2 {
 .last-updated {
   font-weight: 300;
   font-size: 0.65em;
-
   margin: 0 8px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="backdrop">
+  <div class="backdrop" @click="$emit('close-modal')">
     <div class="confirm-delete-modal">
       <h3>Are you sure you want to delete this note?</h3>
       <div class="btn-group">

@@ -13,7 +13,7 @@
     <div class="form-control">
       <label for="text" hidden>Text:</label>
       <textarea
-        rows="5"
+        rows="8"
         v-model="text"
         placeholder="Type your note here..."
         required
@@ -82,7 +82,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 form {
   text-align: center;
-  margin-bottom: 50px;
 }
 .form-control {
   margin-bottom: 10px;

@@ -5,7 +5,12 @@
     v-show="showModal"
   />
   <div class="container">
-    <AppHeader :showForm="showForm" @toggle-form="toggleForm" />
+    <AppHeader
+      :showForm="showForm"
+      @toggle-form="toggleForm"
+      :darkMode="darkMode"
+      @toggle-dark-mode="toggleDarkMode"
+    />
     <NoteForm
       v-show="showForm"
       @add-note="addNote"
@@ -41,28 +46,12 @@ export default defineComponent({
   components: { AppHeader, NotesList, NoteForm, ConfirmDeleteModal },
   data() {
     return {
-      // notes: [] as Note[],
-      notes: [
-        {
-          title: "hello",
-          text: "nice to meet u",
-          id: 1,
-          lastUpdated: new Date(),
-          pinned: false,
-        },
-        {
-          title: "psych",
-          text: "i've heard it both ways",
-          id: 13,
-          lastUpdated: new Date(),
-          pinned: false,
-        },
-      ],
-      pinned: [] as Note[],
+      notes: [] as Note[],
       noteToEdit: {},
       showForm: false,
       showModal: false,
       noteIdToDelete: 0,
+      darkMode: false,
     };
   },
   methods: {
@@ -86,6 +75,7 @@ export default defineComponent({
       if (note) {
         this.noteToEdit = note;
         this.showForm = true;
+        window.scroll(0, 0);
       }
     },
     toggleForm() {
@@ -104,16 +94,31 @@ export default defineComponent({
         note.id === id ? { ...note, pinned: !note.pinned } : note
       );
     },
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+    },
   },
   watch: {
     notes(newNotes) {
       localStorage.setItem("notes", JSON.stringify(newNotes));
     },
+    darkMode(newDarkMode) {
+      localStorage.setItem("darkMode", newDarkMode);
+      if (newDarkMode) {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.remove("dark-mode");
+      }
+    },
   },
   mounted() {
     const localNotes = localStorage.getItem("notes");
+    const localDarkMode = localStorage.getItem("darkMode");
     if (localNotes) {
       this.notes = JSON.parse(localNotes);
+    }
+    if (localDarkMode && localDarkMode === "true") {
+      this.darkMode = true;
     }
   },
 });
@@ -142,6 +147,40 @@ body {
   padding: 20px;
 }
 
+.dark-mode {
+  background-color: black;
+  #app {
+    color: white;
+  }
+
+  .container {
+    border-color: white;
+  }
+
+  .note {
+    background-color: #303030;
+    &:hover {
+      background-color: #424242;
+    }
+  }
+
+  .toggle-btn {
+    background-color: white;
+
+    i {
+      color: rgb(39, 39, 39);
+    }
+  }
+
+  .slider {
+    background-color: rgb(39, 39, 39);
+  }
+
+  .circle:hover {
+    background-color: rgb(65, 65, 65);
+  }
+}
+
 button {
   border-radius: 5px;
   border: none;
@@ -168,10 +207,5 @@ button:hover {
 
 .btn-cancel {
   background-color: gray;
-}
-
-.btn-toggle {
-  width: 40px;
-  height: 40px;
 }
 </style>

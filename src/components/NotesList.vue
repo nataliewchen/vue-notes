@@ -1,10 +1,8 @@
 <template>
-  <div
-    class="notes-list pinned-notes"
-    v-for="note in sortedNotesByPin"
-    :key="note.key"
-  >
+  <div class="notes-list">
     <NoteItem
+      v-for="note in sortedNotesByPin"
+      :key="note.key"
       :note="note"
       @get-edit-note-form="$emit('get-edit-note-form', note.id)"
       @confirm-delete="$emit('confirm-delete', note.id)"
@@ -44,4 +42,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.notes-list {
+  margin-top: 50px;
+}
 </style>
