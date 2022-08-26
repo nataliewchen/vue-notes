@@ -4,6 +4,7 @@
       <h1>notes</h1>
       <div class="circle">
         <i
+          id="toggle-form-btn"
           :class="[showForm ? 'fa-xmark' : 'fa-plus', 'fa-solid']"
           @click="$emit('toggle-form')"
         />
