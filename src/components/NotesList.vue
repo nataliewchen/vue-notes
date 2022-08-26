@@ -1,19 +1,27 @@
 <template>
   <div class="notes-list">
-    <NoteItem
-      v-for="note in sortedNotesByPin"
-      :key="note.key"
-      :note="note"
-      @get-edit-note-form="$emit('get-edit-note-form', note.id)"
-      @confirm-delete="$emit('confirm-delete', note.id)"
-      @toggle-pin="$emit('toggle-pin', note.id)"
-    />
+    <DetectOutsideClick
+      :detect="Boolean(openNote)"
+      @outside-click="onOutsideNoteClick"
+    >
+      <NoteItem
+        v-for="note in sortedNotesByPin"
+        :key="note.id"
+        :note="note"
+        :openNote="openNote"
+        @get-edit-note-form="$emit('get-edit-note-form', note.id)"
+        @confirm-delete="$emit('confirm-delete', note.id)"
+        @toggle-pin="$emit('toggle-pin', note.id)"
+        @set-open-note="setOpenNote"
+      />
+    </DetectOutsideClick>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import NoteItem from "./NoteItem.vue";
+import DetectOutsideClick from "./DetectOutsideClick.vue";
 
 interface Note {
   title: string;
@@ -25,9 +33,29 @@ interface Note {
 
 export default defineComponent({
   name: "NotesList",
-  components: { NoteItem },
+  components: { NoteItem, DetectOutsideClick },
   props: ["notes"],
-  emits: ["get-edit-note-form", "confirm-delete", "toggle-pin"],
+  emits: [
+    "get-edit-note-form",
+    "confirm-delete",
+    "toggle-pin",
+    "set-open-note",
+  ],
+  data() {
+    return {
+      openNote: 0,
+      openButtonGroup: 0,
+    };
+  },
+  methods: {
+    setOpenNote(id: number) {
+      this.openNote = id;
+    },
+    onOutsideNoteClick() {
+      console.log("outside note");
+      this.openNote = 0;
+    },
+  },
   computed: {
     sortedNotesByPin() {
       const pinned = this.notes.filter((note: Note) => note.pinned);
@@ -44,5 +72,9 @@ export default defineComponent({
 <style scoped lang="scss">
 .notes-list {
   margin-top: 50px;
+
+  @include mq(tablet) {
+    padding: 0 20px;
+  }
 }
 </style>

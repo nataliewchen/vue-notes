@@ -1,10 +1,10 @@
 <template>
   <div @click="toggleSlider" class="toggle-btn">
     <div class="icon">
-      <i :class="['fa-solid', icons.false.icon]"></i>
+      <i :class="['fa-solid', icons.false]"></i>
     </div>
     <div class="slider"></div>
-    <i :class="['fa-solid', icons.true.icon]"></i>
+    <i :class="['fa-solid', icons.true]"></i>
   </div>
 </template>
 
@@ -44,11 +44,9 @@ export default defineComponent({
   width: 60px;
   height: 30px;
   border-radius: 100px;
-  background-color: rgb(211, 211, 211);
+  background-color: $gray2;
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-evenly;
+  @include flexbox(row, space-evenly, center);
 
   &:hover {
     cursor: pointer;
@@ -56,12 +54,9 @@ export default defineComponent({
 }
 
 .slider {
-  width: 20px;
-  height: 20px;
-  border-radius: 100px;
+  @include circle(20px);
   background-color: white;
-  position: absolute;
-  top: 50%;
+  @include absolute-vertical-center();
   right: 8px;
 
   transform: translateY(-50%);

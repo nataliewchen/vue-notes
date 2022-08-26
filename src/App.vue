@@ -43,7 +43,12 @@ interface Note {
 
 export default defineComponent({
   name: "App",
-  components: { AppHeader, NotesList, NoteForm, ConfirmDeleteModal },
+  components: {
+    AppHeader,
+    NotesList,
+    NoteForm,
+    ConfirmDeleteModal,
+  },
   data() {
     return {
       notes: [] as Note[],
@@ -52,6 +57,7 @@ export default defineComponent({
       showModal: false,
       noteIdToDelete: 0,
       darkMode: false,
+      detectOutsideClick: false,
     };
   },
   methods: {
@@ -126,7 +132,6 @@ export default defineComponent({
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap");
-$base: #2c3e50;
 
 body {
   overflow-y: scroll;
@@ -137,14 +142,17 @@ body {
   font-family: "Mulish", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: $gray5;
+  margin: 30px;
 }
 
 .container {
-  border: 2px solid $base;
-  margin: 50px auto;
-  max-width: 600px;
-  padding: 20px;
+  border: 2px solid $gray5;
+  max-width: 700px;
+  padding: 20px 10px;
+  @include mq(tablet) {
+    @include margin-auto();
+  }
 }
 
 .dark-mode {
@@ -158,9 +166,9 @@ body {
   }
 
   .note {
-    background-color: #303030;
+    background-color: $gray5;
     &:hover {
-      background-color: #424242;
+      background-color: $gray4;
     }
   }
 
@@ -168,16 +176,21 @@ body {
     background-color: white;
 
     i {
-      color: rgb(39, 39, 39);
+      color: $gray5;
     }
   }
 
   .slider {
-    background-color: rgb(39, 39, 39);
+    background-color: $gray5;
   }
 
   .circle:hover {
-    background-color: rgb(65, 65, 65);
+    background-color: $gray3;
+  }
+
+  .confirm-delete-modal {
+    background-color: black;
+    border-color: white;
   }
 }
 
@@ -187,25 +200,38 @@ button {
   padding: 8px 10px;
   cursor: pointer;
   color: white;
-  background-color: darkslategray;
   font-family: inherit;
+  background-color: $gray3;
 }
 
 button:hover {
-  scale: 1.05;
+  scale: 1.1;
+}
+
+i:hover {
+  cursor: pointer;
 }
 
 .btn-group {
-  display: flex;
-  align-items: center;
+  @include flexbox();
   gap: 0.5em;
 }
 
 .btn-green {
-  background-color: rgb(46, 155, 46);
+  background-color: $green;
+}
+.btn-red {
+  background-color: $red;
+}
+.btn-blue {
+  background-color: $blue;
+}
+.btn-orange {
+  background-color: $orange;
 }
 
-.btn-cancel {
-  background-color: gray;
+.bring-to-front {
+  position: relative;
+  z-index: 2;
 }
 </style>

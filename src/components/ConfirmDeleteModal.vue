@@ -3,8 +3,8 @@
     <div class="confirm-delete-modal">
       <h3>Are you sure you want to delete this note?</h3>
       <div class="btn-group">
-        <button @click="$emit('close-modal')" class="btn-cancel">Cancel</button>
-        <button @click="$emit('delete-note')" class="btn-delete">Delete</button>
+        <button @click="$emit('close-modal')">Cancel</button>
+        <button @click="$emit('delete-note')" class="btn-red">Delete</button>
       </div>
     </div>
   </div>
@@ -22,34 +22,22 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .confirm-delete-modal {
-  position: absolute;
-  width: 50%;
-  left: 50%;
-  top: 25%;
-  transform: translateX(-50%);
-  border: 3px solid black;
+  border: 2px solid black;
   background-color: white;
+  @include absolute-horizontal-center(25%);
   z-index: 100;
-  padding: 20px;
+  padding: 30px 20px;
   max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 
   h3 {
     text-align: center;
+    margin-top: 0;
   }
 }
 
 .backdrop {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  @include full-screen();
   background-color: #00000080;
-}
-
-.btn-delete {
-  background-color: red;
+  z-index: 99;
 }
 </style>

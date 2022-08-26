@@ -1,0 +1,81 @@
+@mixin mq($breakpoint) {
+  @if $breakpoint==mobile {
+    @media only screen and (max-width: 599px) {
+      @content;
+    }
+  }
+  @if $breakpoint==tablet {
+    @media only screen and (min-width: 600px) {
+      @content;
+    }
+  }
+  @if $breakpoint==tabletWide {
+    @media only screen and (min-width: 900px) {
+      @content;
+    }
+  }
+  @if $breakpoint==desktop {
+    @media only screen and (min-width: 1200px) {
+      @content;
+    }
+  }
+  @if $breakpoint==desktopWide {
+    @media only screen and (min-width: 1800px) {
+      @content;
+    }
+  }
+}
+
+@mixin margin-auto() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin flexbox($direction: row, $justify-content: center, $align-items: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin absolute-center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin absolute-vertical-center($left: null) {
+  position: absolute;
+  top: 50%;
+  @if $left {
+    left: $left;
+  }
+  transform: translateY(-50%);
+}
+@mixin absolute-horizontal-center($top: null) {
+  position: absolute;
+  left: 50%;
+  @if $top {
+    top: $top;    
+  }
+  transform: translateX(-50%);
+}
+
+@mixin full-screen() {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+@mixin square($len) {
+  width: $len;
+  height: $len;
+}
+
+@mixin circle($len) {
+  @include square($len);
+  border-radius: 50%;
+}

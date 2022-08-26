@@ -1,5 +1,5 @@
 <template>
-  <button :style="{ backgroundColor: btn.color }">
+  <button :class="[btn.class, 'icon-button']">
     <i :class="['fa-solid', btn.icon]"></i>
   </button>
 </template>
@@ -13,4 +13,5 @@ export default defineComponent({
   props: ["btn"],
 });
 </script>
+
 
