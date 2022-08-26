@@ -2,11 +2,10 @@
   <header>
     <div class="header-top">
       <h1>notes</h1>
-      <div class="circle">
+      <div class="circle hover" @click="openForm">
         <i
           id="toggle-form-btn"
           :class="[showForm ? 'fa-xmark' : 'fa-plus', 'fa-solid']"
-          @click="$emit('toggle-form')"
         />
       </div>
     </div>
@@ -31,7 +30,7 @@ export default defineComponent({
     showForm: Boolean,
     darkMode: Boolean,
   },
-  emits: ["toggle-form", "toggle-dark-mode"],
+  emits: ["toggle-dark-mode"],
   data() {
     return {
       showFormBtn: {
@@ -46,6 +45,11 @@ export default defineComponent({
         true: "fa-moon",
       },
     };
+  },
+  methods: {
+    openForm() {
+      this.$router.push("/new");
+    },
   },
 });
 </script>

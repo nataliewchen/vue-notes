@@ -1,4 +1,11 @@
 <template>
+  <div id="nav">
+    <router-link to="/">Home</router-link> |
+    <router-link to="/new">new</router-link>
+  </div>
+
+  <router-view :notes="notes" @add-note="addNote" />
+  <!-- <router-view name="AddNoteView" :notes="notes" @add-note="addNote" /> -->
   <ContentModal v-show="showModal">
     <h3>Are you sure you want to delete this note?</h3>
     <div class="btn-group">
@@ -7,12 +14,7 @@
     </div>
   </ContentModal>
   <div class="container">
-    <AppHeader
-      :showForm="showForm"
-      @toggle-form="toggleForm"
-      :darkMode="darkMode"
-      @toggle-dark-mode="toggleDarkMode"
-    />
+    <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
     <NoteForm
       v-show="showForm"
       @add-note="addNote"
@@ -198,6 +200,10 @@ body {
     background-color: black;
     border-color: white;
   }
+}
+
+.hover {
+  cursor: pointer;
 }
 
 button {

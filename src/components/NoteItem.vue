@@ -27,21 +27,26 @@
     <div
       :class="[showNote ? 'full-text' : 'preview-text', 'note-text']"
       :contenteditable="editable"
+      tabindex="0"
     >
       {{ showNote ? note.text : previewText }}
     </div>
   </div>
+  <!-- <ContentModal v-show="showNote">
+    {{ note.text }}
+  </ContentModal> -->
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import IconButton from "./IconButton.vue";
 import dayjs from "dayjs";
+import ContentModal from "./ContentModal.vue";
 
 export default defineComponent({
   name: "NoteItem",
-  components: { IconButton },
   props: ["note", "openNote"],
+  components: { IconButton },
   emits: [
     "toggle-pin",
     "get-edit-note-form",
@@ -87,8 +92,9 @@ export default defineComponent({
   },
   methods: {
     onClick() {
-      this.showNote = true;
-      this.$emit("set-open-note", this.showNote ? this.note.id : 0);
+      // this.showNote = !this.showNote;
+      // this.$emit("set-open-note", this.showNote ? this.note.id : 0);
+      this.$router.push(`${this.note.id}`);
     },
     editNote() {
       this.editable = !this.editable;
@@ -103,6 +109,14 @@ export default defineComponent({
         this.showNote = false;
       }
     },
+    editable(newEditable) {
+      if (newEditable) {
+        const text = document.querySelector(".note-text");
+        if (text instanceof HTMLElement) {
+          text.focus();
+        }
+      }
+    },
   },
 });
 </script>
@@ -114,6 +128,7 @@ export default defineComponent({
   margin-bottom: 10px;
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  user-select: none;
 
   &:hover {
     cursor: pointer;

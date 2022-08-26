@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit" data-test="form">
+    <h2 class="form-title">new note</h2>
     <div class="form-control">
       <label for="title" hidden>Title:</label>
       <input
@@ -44,11 +45,6 @@ export default defineComponent({
       lastUpdated: Date,
       pinned: false,
     };
-  },
-  computed: {
-    // isEditing() {
-    //   return Object.entries(this.noteToEdit).length > 0;
-    // },
   },
   watch: {
     noteToEdit(newNote) {

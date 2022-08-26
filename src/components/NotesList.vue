@@ -1,20 +1,20 @@
 <template>
   <div class="notes-list">
-    <!-- <DetectOutsideClick
+    <DetectOutsideClick
       :detect="Boolean(openNote)"
       @outside-click="onOutsideNoteClick"
-    > -->
-    <NoteItem
-      v-for="note in sortedNotesByPin"
-      :key="note.id"
-      :note="note"
-      :openNote="openNote"
-      @get-edit-note-form="$emit('get-edit-note-form', note.id)"
-      @confirm-delete="$emit('confirm-delete', note.id)"
-      @toggle-pin="$emit('toggle-pin', note.id)"
-      @set-open-note="setOpenNote"
-    />
-    <!-- </DetectOutsideClick> -->
+    >
+      <NoteItem
+        v-for="note in sortedNotesByPin"
+        :key="note.id"
+        :note="note"
+        :openNote="openNote"
+        @get-edit-note-form="$emit('get-edit-note-form', note.id)"
+        @confirm-delete="$emit('confirm-delete', note.id)"
+        @toggle-pin="$emit('toggle-pin', note.id)"
+        @set-open-note="setOpenNote"
+      />
+    </DetectOutsideClick>
   </div>
 </template>
 
@@ -33,7 +33,7 @@ interface Note {
 
 export default defineComponent({
   name: "NotesList",
-  components: { NoteItem },
+  components: { NoteItem, DetectOutsideClick },
   props: ["notes"],
   emits: [
     "get-edit-note-form",

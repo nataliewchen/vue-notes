@@ -1,6 +1,6 @@
 <template>
-  <div class="backdrop" @click="$emit('close-modal')">
-    <div class="modal">
+  <div class="backdrop" @click="onBackdropClick" v-show="showModal">
+    <div class="modal" @click.stop="">
       <slot></slot>
     </div>
   </div>
@@ -12,6 +12,20 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ContentModal",
+  data() {
+    return {
+      showModal: true,
+    };
+  },
+  methods: {
+    onBackdropClick() {
+      this.showModal = false;
+      this.$emit("backdrop-click");
+    },
+    toggleModal() {
+      this.showModal = !this.showModal;
+    },
+  },
 });
 </script>
 
@@ -20,10 +34,9 @@ export default defineComponent({
 .modal {
   border: 2px solid black;
   background-color: white;
-  @include absolute-horizontal-center(25%);
+  @include absolute-horizontal-center(30px);
   z-index: 100;
   padding: 30px 20px;
-  max-width: 400px;
 
   text-align: center;
   margin-top: 0;
