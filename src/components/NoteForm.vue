@@ -87,28 +87,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-form {
-  text-align: center;
-  width: 100%;
-}
-.form-title {
-  margin-top: 0;
-}
-.form-control {
-  margin-bottom: 10px;
-
-  textarea,
-  input {
-    font-family: inherit;
-    padding: 8px;
-    resize: none;
-    font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid black;
-  }
-}
-
 #title {
   font-size: 1.2em;
   font-weight: 600;
@@ -117,5 +95,10 @@ form {
 .read-only input:focus,
 .read-only textarea:focus {
   outline: none;
+}
+
+.read-only input,
+.read-only textarea {
+  border-color: #00000000;
 }
 </style>

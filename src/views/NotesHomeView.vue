@@ -1,10 +1,8 @@
 <template>
   <div class="container">
-    <AppHeader
-      :darkMode="darkMode"
-      @toggle-dark-mode="$emit('toggle-dark-mode')"
-    />
-    <NotesList :notes="notes" />
+    <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
+    <SearchBar @search-notes="searchNotes" />
+    <NotesList :notes="notes" :filteredNotes="filteredNotes" />
   </div>
   <router-view
     :notes="notes"
@@ -19,14 +17,16 @@
 import { defineComponent } from "vue";
 import AppHeader from "../components/AppHeader.vue";
 import NotesList from "../components/NotesList.vue";
+import SearchBar from "../components/SearchBar.vue";
 import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "NotesHomeView",
-  components: { AppHeader, NotesList },
+  components: { AppHeader, NotesList, SearchBar },
   data() {
     return {
       notes: [] as Note[],
+      filteredNotes: [] as Note[],
       darkMode: false,
     };
   },
@@ -51,10 +51,23 @@ export default defineComponent({
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
     },
+    searchNotes(query: string) {
+      if (!query) {
+        this.filteredNotes = this.notes;
+      } else {
+        const filtered = this.notes.filter(
+          (note: Note) =>
+            note.title.toLowerCase().includes(query.toLowerCase()) ||
+            note.text.toLowerCase().includes(query.toLowerCase())
+        );
+        this.filteredNotes = filtered;
+      }
+    },
   },
   watch: {
     notes(newNotes) {
       localStorage.setItem("notes", JSON.stringify(newNotes));
+      this.filteredNotes = newNotes;
     },
     darkMode(newDarkMode) {
       localStorage.setItem("darkMode", newDarkMode);
@@ -70,6 +83,7 @@ export default defineComponent({
     const localDarkMode = localStorage.getItem("darkMode");
     if (localNotes) {
       this.notes = JSON.parse(localNotes);
+      this.filteredNotes = JSON.parse(localNotes);
     }
     if (localDarkMode && localDarkMode === "true") {
       this.darkMode = true;

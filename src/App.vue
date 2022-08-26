@@ -15,6 +15,7 @@ export default defineComponent({
 @import url("https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap");
 
 body {
+  overflow-x: hidden;
   overflow-y: scroll;
   margin: 0;
 }
@@ -78,7 +79,8 @@ body {
     }
 
     #text,
-    #title {
+    #title,
+    #query {
       background-color: black;
       color: white;
       border-color: white;
@@ -141,12 +143,35 @@ i:hover {
   background-color: #00000000;
 }
 
-header {
+header,
+.search-bar {
   padding: 0 10px;
   margin-bottom: 30px;
 
   @include mq(tablet) {
     padding: 0 40px;
+  }
+}
+
+form {
+  text-align: center;
+  width: 100%;
+}
+.form-title {
+  margin-top: 0;
+}
+.form-control {
+  margin-bottom: 10px;
+
+  textarea,
+  input {
+    font-family: inherit;
+    padding: 8px;
+    resize: none;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid black;
   }
 }
 </style>

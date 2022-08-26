@@ -25,9 +25,6 @@ export default defineComponent({
       showModal: true,
     };
   },
-  mounted() {
-    console.log(this.small, this.transparent);
-  },
 
   methods: {
     onBackdropClick() {

@@ -7,10 +7,6 @@ const routes = [
     path: '/',
     name: 'NotesHomeView',
     component: NotesHomeView,
-        // components: {
-    //   default: AddNoteView,
-    //   AddNoteView: AddNoteView
-    // }
     children: [
       {
         path: 'new',
@@ -22,20 +18,6 @@ const routes = [
       }
     ]
   },
-  // {
-  //   path: '/new',
-  //   name: 'AddNoteView',
-  //   component: AddNoteView
-  //   // components: {
-  //   //   default: AddNoteView,
-  //   //   AddNoteView: AddNoteView
-  //   // }
-  // },
-  // {
-  //   path: '/:id',
-  //   name: 'NoteDetailView',
-  //   component: NoteDetailView,
-  // },
 ]
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
