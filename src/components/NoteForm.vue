@@ -6,6 +6,7 @@
     :class="isViewing && !isEditing ? 'read-only' : ''"
   >
     <h2 class="form-title" v-if="!isViewing">new note</h2>
+
     <div class="form-control">
       <label for="title" hidden>Title:</label>
       <input

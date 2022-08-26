@@ -1,6 +1,18 @@
 <template>
-  <ContentModal @backdrop-click="goBack">
+  <ContentModal @backdrop-click="confirmClose" :closeOnBackdropClick="false">
     <NoteForm @handle-form="addNote" />
+  </ContentModal>
+  <ContentModal
+    v-show="showConfirmCloseModal"
+    @backdrop-click="closeConfirmCloseModal"
+    :small="true"
+    :transparent="true"
+  >
+    <h3>Are you sure you want to discard your note?</h3>
+    <div class="btn-group">
+      <button @click="backToAdd">Cancel</button>
+      <button @click="discardNote" class="btn-red">Discard</button>
+    </div>
   </ContentModal>
 </template>
 
@@ -19,14 +31,38 @@ interface Note {
 export default defineComponent({
   name: "AddNoteView",
   components: { NoteForm, ContentModal },
-  emits: ["add-note"],
+  props: ["notes"],
+  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
+  data() {
+    return {
+      showConfirmCloseModal: false,
+    };
+  },
   methods: {
-    goBack() {
-      this.$router.push("/");
+    confirmClose() {
+      const text = document.querySelector("#text") as HTMLInputElement | null;
+      const title = document.querySelector(
+        "#title"
+      ) as HTMLTextAreaElement | null;
+      if ((text && text.value) || (title && title.value)) {
+        this.showConfirmCloseModal = true;
+      } else {
+        this.$router.push("/");
+      }
     },
+
     addNote(newNote: Note) {
       this.$emit("add-note", newNote);
-      this.goBack();
+      this.$router.push("/");
+    },
+    closeConfirmCloseModal() {
+      this.showConfirmCloseModal = false;
+    },
+    backToAdd() {
+      this.showConfirmCloseModal = false;
+    },
+    discardNote() {
+      this.$router.push("/");
     },
   },
 });

@@ -14,7 +14,6 @@
             @click.stop="toggleEditing"
           />
         </div>
-        <HoverCircleButton icon="fa-xmark" @click="closeModal" />
       </div>
       <div class="last-updated">last updated: {{ lastUpdated }}</div>
     </header>
@@ -40,12 +39,11 @@ import dayjs from "dayjs";
 import ContentModal from "../components/ContentModal.vue";
 import IconButton from "../components/IconButton.vue";
 import NoteForm from "../components/NoteForm.vue";
-import HoverCircleButton from "../components/HoverCircleButton.vue";
 import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "NoteDetailView",
-  components: { ContentModal, IconButton, NoteForm, HoverCircleButton },
+  components: { ContentModal, IconButton, NoteForm },
   props: ["notes"],
   emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
 

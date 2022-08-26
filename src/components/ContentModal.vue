@@ -5,6 +5,11 @@
     v-show="showModal"
   >
     <div :class="['modal', small ? 'modal-sm' : '']" @click.stop="">
+      <HoverCircleButton
+        class="close-form"
+        icon="fa-xmark"
+        @click="onBackdropClick"
+      />
       <slot></slot>
     </div>
   </div>
@@ -13,12 +18,18 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import HoverCircleButton from "./HoverCircleButton.vue";
 
 export default defineComponent({
   name: "ContentModal",
+  components: { HoverCircleButton },
   props: {
     small: Boolean,
     transparent: Boolean,
+    closeOnBackdropClick: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -28,7 +39,9 @@ export default defineComponent({
 
   methods: {
     onBackdropClick() {
-      this.showModal = false;
+      if (this.closeOnBackdropClick) {
+        this.showModal = false;
+      }
       this.$emit("backdrop-click");
     },
     toggleModal() {
@@ -59,11 +72,22 @@ export default defineComponent({
 .modal-sm {
   max-width: 300px;
   top: 20%;
+
+  .close-form {
+    scale: 0.5;
+    top: 0;
+    right: 0;
+  }
 }
 
 .backdrop {
   @include full-screen();
   background-color: #00000080;
   z-index: 99;
+}
+.close-form {
+  position: absolute;
+  top: 4px;
+  right: 4px;
 }
 </style>
