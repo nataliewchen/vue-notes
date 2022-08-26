@@ -91,6 +91,9 @@ form {
   text-align: center;
   width: 100%;
 }
+.form-title {
+  margin-top: 0;
+}
 .form-control {
   margin-bottom: 10px;
 

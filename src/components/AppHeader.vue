@@ -43,15 +43,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-header {
-  padding: 0 10px;
-  margin-bottom: 30px;
-
-  @include mq(tablet) {
-    padding: 0 40px;
-  }
-}
-
 .header-top {
   @include flexbox(row, space-between);
 }

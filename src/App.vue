@@ -132,10 +132,6 @@ body {
       background-color: $gray3;
     }
 
-    .backdrop {
-      background-color: $gray4;
-    }
-
     .modal {
       background-color: black;
       border-color: white;
@@ -175,6 +171,12 @@ i:hover {
 .btn-group {
   @include flexbox();
   gap: 0.8em;
+
+  > * {
+    flex: 1 1 0px;
+    white-space: nowrap;
+    /* text-align: center; */
+  }
 }
 
 .btn-green {
@@ -193,5 +195,18 @@ i:hover {
 .bring-to-front {
   position: relative;
   z-index: 2;
+}
+
+.transparent {
+  background-color: #00000000;
+}
+
+header {
+  padding: 0 10px;
+  margin-bottom: 30px;
+
+  @include mq(tablet) {
+    padding: 0 40px;
+  }
 }
 </style>

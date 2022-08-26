@@ -1,6 +1,10 @@
 <template>
-  <div class="backdrop" @click="onBackdropClick" v-show="showModal">
-    <div class="modal" @click.stop="">
+  <div
+    :class="[transparent ? 'transparent' : '', 'backdrop']"
+    @click="onBackdropClick"
+    v-show="showModal"
+  >
+    <div :class="['modal', small ? 'modal-sm' : '']" @click.stop="">
       <slot></slot>
     </div>
   </div>
@@ -12,11 +16,19 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ContentModal",
+  props: {
+    small: Boolean,
+    transparent: Boolean,
+  },
   data() {
     return {
       showModal: true,
     };
   },
+  mounted() {
+    console.log(this.small, this.transparent);
+  },
+
   methods: {
     onBackdropClick() {
       this.showModal = false;
@@ -34,7 +46,7 @@ export default defineComponent({
 .modal {
   border: 2px solid black;
   background-color: white;
-  @include absolute-horizontal-center(30px);
+  @include absolute-horizontal-center(10%);
   z-index: 100;
   padding: 30px 20px;
   text-align: center;
@@ -45,6 +57,11 @@ export default defineComponent({
   @include mq(tablet) {
     width: 60%;
   }
+}
+
+.modal-sm {
+  max-width: 300px;
+  top: 20%;
 }
 
 .backdrop {

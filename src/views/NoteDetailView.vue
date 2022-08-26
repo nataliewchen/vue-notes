@@ -1,23 +1,31 @@
 <template>
   <ContentModal @backdrop-click="closeModal">
-    <div class="btn-group btn-header">
-      <div class="btn-group">
-        <IconButton
-          :btn="buttons.pin"
-          @click.stop="$emit('toggle-pin', note.id)"
-          :class="note.pinned ? 'btn-orange' : ''"
-        />
-        <IconButton
-          :btn="isEditing ? buttons.save : buttons.edit"
-          @click.stop="toggleEditing"
-        />
-        <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
+    <header>
+      <div class="btn-header">
+        <div class="btn-group">
+          <IconButton
+            :btn="buttons.pin"
+            @click.stop="$emit('toggle-pin', note.id)"
+            :class="note.pinned ? 'btn-orange' : ''"
+          />
+          <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
+          <IconButton
+            :btn="isEditing ? buttons.save : buttons.edit"
+            @click.stop="toggleEditing"
+          />
+        </div>
+        <HoverCircleButton icon="fa-xmark" @click="closeModal" />
       </div>
-      <HoverCircleButton icon="fa-xmark" @click="closeModal" />
-    </div>
+      <div class="last-updated">last updated: {{ lastUpdated }}</div>
+    </header>
     <NoteForm :noteData="note" :isEditing="isEditing" @handle-form="editNote" />
   </ContentModal>
-  <ContentModal v-show="showDeleteModal" @backdrop-click="closeDeleteModal">
+  <ContentModal
+    v-show="showDeleteModal"
+    @backdrop-click="closeDeleteModal"
+    :small="true"
+    :transparent="true"
+  >
     <h3>Are you sure you want to delete this note?</h3>
     <div class="btn-group">
       <button @click="closeDeleteModal">Cancel</button>
@@ -72,7 +80,11 @@ export default defineComponent({
       },
     };
   },
-
+  computed: {
+    lastUpdated() {
+      return dayjs(this.note.lastUpdated).format("M/DD/YY hh:mm a");
+    },
+  },
   methods: {
     closeModal() {
       this.submitForm();
@@ -96,9 +108,9 @@ export default defineComponent({
     },
     toggleEditing() {
       this.isEditing = !this.isEditing;
-      if (!this.isEditing) {
-        this.submitForm();
-      }
+      // if (!this.isEditing) {
+      //   this.submitForm();
+      // }
     },
     confirmDelete() {
       this.showDeleteModal = true;
@@ -134,5 +146,13 @@ export default defineComponent({
 .btn-header {
   @include flexbox(row, space-between, center);
   margin-bottom: 10px;
+}
+
+header {
+  padding: 0;
+
+  .last-updated {
+    text-align: left;
+  }
 }
 </style>
