@@ -2,9 +2,7 @@
 
 describe('Create New Note', () => {
   it('can create a new note', () => {
-    cy.visit('/')
-
-    cy.get('#toggle-form-btn').click()
+    cy.visit('/new')
 
     cy.get('form').should('be.visible')
 

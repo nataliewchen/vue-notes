@@ -19,7 +19,7 @@ interface Note {
 export default defineComponent({
   name: "AddNoteView",
   components: { NoteForm, ContentModal },
-  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
+  emits: ["add-note"],
   methods: {
     goBack() {
       this.$router.push("/");

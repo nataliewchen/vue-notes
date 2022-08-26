@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
+    <AppHeader
+      :darkMode="darkMode"
+      @toggle-dark-mode="$emit('toggle-dark-mode')"
+    />
     <NotesList :notes="notes" />
   </div>
 </template>
@@ -12,8 +15,8 @@ import NotesList from "../components/NotesList.vue";
 
 export default defineComponent({
   name: "HomeView",
-  props: ["notes"],
+  props: ["notes", "darkMode"],
   components: { AppHeader, NotesList },
-  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
+  emits: ["toggle-dark-mode"],
 });
 </script>

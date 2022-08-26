@@ -1,29 +1,22 @@
 <template>
-  <router-view name="HomeView" :darkMode="darkMode" :notes="notes" />
-  <HomeView />
   <router-view
     :notes="notes"
+    :darkMode="darkMode"
+    @toggle-dark-mode="toggleDarkMode"
     @add-note="addNote"
     @toggle-pin="togglePin"
     @edit-note="editNote"
     @delete-note="deleteNote"
   />
-  <router-view name="AddNoteView" :notes="notes" @add-note="addNote" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-// import AppHeader from "./components/AppHeader.vue";
-// import NotesList from "./components/NotesList.vue";
 import { Note } from "./types/custom-types.js";
-import HomeView from "./views/HomeView.vue";
 
 export default defineComponent({
   name: "App",
-  components: {
-    // AppHeader,
-    // NotesList,
-  },
+  components: {},
   data() {
     return {
       notes: [] as Note[],
@@ -100,7 +93,7 @@ body {
 
 .container {
   border: 2px solid $gray5;
-  max-width: 700px;
+  max-width: 600px;
   padding: 20px 10px;
   @include mq(tablet) {
     @include margin-auto();
@@ -170,7 +163,7 @@ i:hover {
 
 .btn-group {
   @include flexbox();
-  gap: 0.5em;
+  gap: 0.8em;
 }
 
 .btn-green {

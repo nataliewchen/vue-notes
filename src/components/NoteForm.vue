@@ -13,7 +13,7 @@
         v-model="title"
         id="title"
         class="title"
-        placeholder="Title"
+        :placeholder="isViewing ? '' : 'Title'"
         name="title"
         data-test="titleInput"
         :readonly="isViewing && !isEditing"
@@ -22,7 +22,7 @@
     <div class="form-control">
       <label for="text" hidden>Text:</label>
       <textarea
-        rows="8"
+        rows="10"
         v-model="text"
         id="text"
         placeholder="Type your note here..."
@@ -89,13 +89,13 @@ export default defineComponent({
 <style lang="scss" scoped>
 form {
   text-align: center;
+  width: 100%;
 }
 .form-control {
   margin-bottom: 10px;
 
   textarea,
   input {
-    max-width: 550px;
     font-family: inherit;
     padding: 8px;
     resize: none;

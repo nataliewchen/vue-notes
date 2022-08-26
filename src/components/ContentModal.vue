@@ -37,9 +37,14 @@ export default defineComponent({
   @include absolute-horizontal-center(30px);
   z-index: 100;
   padding: 30px 20px;
-
   text-align: center;
   margin-top: 0;
+  width: 80%;
+  max-width: 600px;
+
+  @include mq(tablet) {
+    width: 60%;
+  }
 }
 
 .backdrop {

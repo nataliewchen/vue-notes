@@ -2,9 +2,7 @@
   <header>
     <div class="header-top">
       <h1>notes</h1>
-      <div class="circle hover" @click="openForm">
-        <i id="toggle-form-btn" class="fa-plus fa-solid" />
-      </div>
+      <HoverCircleButton icon="fa-plus" @click="openForm" />
     </div>
     <div class="mode-toggle">
       <IconToggleButton
@@ -19,10 +17,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import IconToggleButton from "./IconToggleButton.vue";
+import HoverCircleButton from "./HoverCircleButton.vue";
 
 export default defineComponent({
   name: "AppHeader",
-  components: { IconToggleButton },
+  components: { IconToggleButton, HoverCircleButton },
   props: {
     darkMode: Boolean,
   },

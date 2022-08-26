@@ -1,39 +1,21 @@
 <template>
   <ContentModal @backdrop-click="closeModal">
-    <div class="btn-group">
-      <IconButton
-        :btn="buttons.pin"
-        @click.stop="$emit('toggle-pin', note.id)"
-        :class="note.pinned ? 'btn-orange' : ''"
-      />
-      <IconButton
-        :btn="isEditing ? buttons.save : buttons.edit"
-        @click.stop="toggleEditing"
-      />
-      <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
-    </div>
-    <NoteForm :noteData="note" :isEditing="isEditing" @handle-form="editNote" />
-    <!-- <header> -->
-    <!-- <h2 class="note-title" :contenteditable="editable">{{ note.title }}</h2>
-      <h5>{{ note.lastUpdated }}</h5>
-      buttons
+    <div class="btn-group btn-header">
       <div class="btn-group">
-        <IconButton :btn="buttons.edit" @click.stop="toggleEditable" />
-        <IconButton :btn="buttons.delete" @click.stop="confirmDelete" /> -->
-    <!-- <IconButton
+        <IconButton
           :btn="buttons.pin"
           @click.stop="$emit('toggle-pin', note.id)"
-        /> -->
-    <!-- <IconButton
-          v-for="btn in buttons"
-          :key="btn.type"
-          :btn="btn"
-          @click.stop="$emit(btn.emit, note.id)"
-        /> -->
-    <!-- </div>
-    </header>
-    <br />
-    <p class="note-text" :contenteditable="editable">{{ note.text }}</p>-->
+          :class="note.pinned ? 'btn-orange' : ''"
+        />
+        <IconButton
+          :btn="isEditing ? buttons.save : buttons.edit"
+          @click.stop="toggleEditing"
+        />
+        <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
+      </div>
+      <HoverCircleButton icon="fa-xmark" @click="closeModal" />
+    </div>
+    <NoteForm :noteData="note" :isEditing="isEditing" @handle-form="editNote" />
   </ContentModal>
   <ContentModal v-show="showDeleteModal" @backdrop-click="closeDeleteModal">
     <h3>Are you sure you want to delete this note?</h3>
@@ -50,20 +32,14 @@ import dayjs from "dayjs";
 import ContentModal from "../components/ContentModal.vue";
 import IconButton from "../components/IconButton.vue";
 import NoteForm from "../components/NoteForm.vue";
-
-interface Note {
-  title: string;
-  text: string;
-  id: number;
-  lastUpdated: Date;
-  pinned: boolean;
-}
+import HoverCircleButton from "../components/HoverCircleButton.vue";
+import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "NoteDetailView",
-  components: { ContentModal, IconButton, NoteForm },
+  components: { ContentModal, IconButton, NoteForm, HoverCircleButton },
   props: ["notes"],
-  emits: ["toggle-pin", "edit-note", "delete-note", "add-note"],
+  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
 
   data() {
     return {
@@ -155,7 +131,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.btn-group {
+.btn-header {
+  @include flexbox(row, space-between, center);
   margin-bottom: 10px;
 }
 </style>
