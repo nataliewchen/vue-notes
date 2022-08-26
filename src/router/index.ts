@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import NotesHomeView from '../views/NotesHomeView.vue'
 import AddNoteView from '../views/AddNoteView.vue'
 import NoteDetailView from '../views/NoteDetailView.vue'
 const routes = [
   {
     path: '/',
-    name: 'HomeView',
-    component: HomeView,
+    name: 'NotesHomeView',
+    component: NotesHomeView,
         // components: {
     //   default: AddNoteView,
     //   AddNoteView: AddNoteView
