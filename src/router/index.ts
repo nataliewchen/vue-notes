@@ -5,8 +5,12 @@ import NoteDetailView from '../views/NoteDetailView.vue'
 const routes = [
   {
     path: '/',
-    name: 'App',
+    name: 'HomeView',
     component: HomeView,
+        // components: {
+    //   default: AddNoteView,
+    //   AddNoteView: AddNoteView
+    // }
   },
   {
     path: '/new',

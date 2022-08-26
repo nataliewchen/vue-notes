@@ -1,9 +1,5 @@
 <template>
-  <div
-    @click="onClick"
-    :class="[showNote ? 'bring-to-front' : '', 'note']"
-    data-test="note"
-  >
+  <div @click="onClick" class="note" data-test="note">
     <div class="note-header">
       <div class="note-header-text">
         <h2 class="note-title">
@@ -14,72 +10,20 @@
           <span class="last-updated">{{ lastUpdated }}</span>
         </h2>
       </div>
-      <div class="btn-group" v-show="showNote">
-        <IconButton
-          v-for="btn in buttons"
-          :key="btn.type"
-          :btn="btn"
-          @click.stop="$emit(btn.emit, note.id)"
-        />
-        <IconButton :btn="buttons.edit" @click.stop="editNote" />
-      </div>
     </div>
-    <div
-      :class="[showNote ? 'full-text' : 'preview-text', 'note-text']"
-      :contenteditable="editable"
-      tabindex="0"
-    >
-      {{ showNote ? note.text : previewText }}
+    <div class="preview-text">
+      {{ previewText }}
     </div>
   </div>
-  <!-- <ContentModal v-show="showNote">
-    {{ note.text }}
-  </ContentModal> -->
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import IconButton from "./IconButton.vue";
 import dayjs from "dayjs";
-import ContentModal from "./ContentModal.vue";
 
 export default defineComponent({
   name: "NoteItem",
-  props: ["note", "openNote"],
-  components: { IconButton },
-  emits: [
-    "toggle-pin",
-    "get-edit-note-form",
-    "confirm-delete",
-    "set-open-note",
-  ],
-  data() {
-    return {
-      showNote: false,
-      showButtons: false,
-      editable: false,
-      buttons: {
-        pin: {
-          text: "pin",
-          class: "",
-          icon: "fa-thumbtack",
-          emit: "toggle-pin",
-        },
-        edit: {
-          text: "edit",
-          class: "btn-blue",
-          icon: "fa-pencil",
-          emit: "get-edit-note-form",
-        },
-        delete: {
-          text: "delete",
-          class: "btn-red",
-          icon: "fa-trash-can",
-          emit: "confirm-delete",
-        },
-      },
-    };
-  },
+  props: ["note"],
   computed: {
     lastUpdated() {
       return dayjs(this.note.lastUpdated).format("M/DD/YY");
@@ -92,30 +36,7 @@ export default defineComponent({
   },
   methods: {
     onClick() {
-      // this.showNote = !this.showNote;
-      // this.$emit("set-open-note", this.showNote ? this.note.id : 0);
       this.$router.push(`${this.note.id}`);
-    },
-    editNote() {
-      this.editable = !this.editable;
-    },
-  },
-  watch: {
-    note(newNote) {
-      this.buttons.pin.class = newNote.pinned ? "btn-orange" : "";
-    },
-    openNote(newOpenNote) {
-      if (newOpenNote !== this.note.id) {
-        this.showNote = false;
-      }
-    },
-    editable(newEditable) {
-      if (newEditable) {
-        const text = document.querySelector(".note-text");
-        if (text instanceof HTMLElement) {
-          text.focus();
-        }
-      }
     },
   },
 });
@@ -143,11 +64,6 @@ export default defineComponent({
   }
   @include flexbox(row, space-between, center);
   margin-bottom: 5px;
-}
-
-.full-text {
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
 }
 
 .preview-text {

@@ -3,10 +3,7 @@
     <div class="header-top">
       <h1>notes</h1>
       <div class="circle hover" @click="openForm">
-        <i
-          id="toggle-form-btn"
-          :class="[showForm ? 'fa-xmark' : 'fa-plus', 'fa-solid']"
-        />
+        <i id="toggle-form-btn" class="fa-plus fa-solid" />
       </div>
     </div>
     <div class="mode-toggle">
@@ -27,19 +24,11 @@ export default defineComponent({
   name: "AppHeader",
   components: { IconToggleButton },
   props: {
-    showForm: Boolean,
     darkMode: Boolean,
   },
   emits: ["toggle-dark-mode"],
   data() {
     return {
-      showFormBtn: {
-        icon: "fa-plus",
-      },
-      closeFormBtn: {
-        icon: "fa-xmark",
-      },
-
       toggleIcons: {
         false: "fa-sun",
         true: "fa-moon",

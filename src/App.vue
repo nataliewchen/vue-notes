@@ -1,9 +1,6 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/new">new</router-link>
-  </div>
-
+  <router-view name="HomeView" :darkMode="darkMode" :notes="notes" />
+  <HomeView />
   <router-view
     :notes="notes"
     @add-note="addNote"
@@ -12,50 +9,25 @@
     @delete-note="deleteNote"
   />
   <router-view name="AddNoteView" :notes="notes" @add-note="addNote" />
-  <ContentModal v-show="showModal">
-    <h3>Are you sure you want to delete this note?</h3>
-    <div class="btn-group">
-      <button @click="closeModal">Cancel</button>
-      <button @click="deleteNote" class="btn-red">Delete</button>
-    </div>
-  </ContentModal>
-  <div class="container">
-    <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
-    <!-- <NoteForm v-show="showForm" @add-note="addNote" :noteToEdit="noteToEdit" /> -->
-    <NotesList
-      :notes="notes"
-      @get-edit-note-form="getEditNoteForm"
-      @confirm-delete="confirmDelete"
-      @toggle-pin="togglePin"
-    />
-  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AppHeader from "./components/AppHeader.vue";
-// import NoteForm from "./components/NoteForm.vue";
-import NotesList from "./components/NotesList.vue";
-import ContentModal from "./components/ContentModal.vue";
+// import AppHeader from "./components/AppHeader.vue";
+// import NotesList from "./components/NotesList.vue";
 import { Note } from "./types/custom-types.js";
+import HomeView from "./views/HomeView.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    AppHeader,
-    NotesList,
-
-    ContentModal,
+    // AppHeader,
+    // NotesList,
   },
   data() {
     return {
       notes: [] as Note[],
-      pinned: [] as Note[],
-      showForm: false,
-      showModal: false,
-      noteIdToDelete: 0,
       darkMode: false,
-      detectOutsideClick: false,
     };
   },
   methods: {
@@ -70,23 +42,6 @@ export default defineComponent({
     },
     deleteNote(id: number) {
       this.notes = this.notes.filter((note) => note.id !== id);
-    },
-    getEditNoteForm(id: number) {
-      const note = this.notes.find((note) => note.id === id);
-      if (note) {
-        this.showForm = true;
-        window.scroll(0, 0);
-      }
-    },
-    toggleForm() {
-      this.showForm = !this.showForm;
-    },
-    confirmDelete(id: number) {
-      this.noteIdToDelete = id;
-      this.showModal = true;
-    },
-    closeModal() {
-      this.showModal = false;
     },
     togglePin(id: number) {
       this.notes = this.notes.map((note) =>
