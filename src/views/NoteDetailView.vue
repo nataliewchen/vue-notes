@@ -1,5 +1,5 @@
 <template>
-  <ContentModal @backdrop-click="closeModal">
+  <ContentModal @backdrop-click="closeModal" :closeOnBackdropClick="false">
     <header>
       <div class="btn-header">
         <div class="btn-group">
@@ -31,10 +31,22 @@
       <button @click="deleteNote" class="btn-red">Delete</button>
     </div>
   </ContentModal>
+  <ContentModal
+    v-show="showConfirmCloseModal"
+    @backdrop-click="backToEditing"
+    :small="true"
+    :transparent="true"
+  >
+    <h3>Are you sure you want to discard your changes?</h3>
+    <div class="btn-group">
+      <button @click="backToEditing">Cancel</button>
+      <button @click="discardChanges" class="btn-red">Discard</button>
+    </div>
+  </ContentModal>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import dayjs from "dayjs";
 import ContentModal from "../components/ContentModal.vue";
 import IconButton from "../components/IconButton.vue";
@@ -54,6 +66,7 @@ export default defineComponent({
       ),
       isEditing: false,
       showDeleteModal: false,
+      showConfirmCloseModal: false,
       buttons: {
         pin: {
           text: "pin",
@@ -85,8 +98,11 @@ export default defineComponent({
   },
   methods: {
     closeModal() {
-      this.submitForm();
-      this.$router.push("/");
+      if (this.isEditing) {
+        this.showConfirmCloseModal = true;
+      } else {
+        this.$router.push("/");
+      }
     },
     closeDeleteModal() {
       this.showDeleteModal = false;
@@ -106,15 +122,18 @@ export default defineComponent({
     },
     toggleEditing() {
       this.isEditing = !this.isEditing;
-      // if (!this.isEditing) {
-      //   this.submitForm();
-      // }
     },
     confirmDelete() {
       this.showDeleteModal = true;
     },
     deleteNote() {
       this.$emit("delete-note", this.note.id);
+      this.$router.push("/");
+    },
+    backToEditing() {
+      this.showConfirmCloseModal = false;
+    },
+    discardChanges() {
       this.$router.push("/");
     },
   },
