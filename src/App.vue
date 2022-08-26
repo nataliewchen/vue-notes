@@ -4,8 +4,14 @@
     <router-link to="/new">new</router-link>
   </div>
 
-  <router-view :notes="notes" @add-note="addNote" />
-  <!-- <router-view name="AddNoteView" :notes="notes" @add-note="addNote" /> -->
+  <router-view
+    :notes="notes"
+    @add-note="addNote"
+    @toggle-pin="togglePin"
+    @edit-note="editNote"
+    @delete-note="deleteNote"
+  />
+  <router-view name="AddNoteView" :notes="notes" @add-note="addNote" />
   <ContentModal v-show="showModal">
     <h3>Are you sure you want to delete this note?</h3>
     <div class="btn-group">
@@ -15,12 +21,7 @@
   </ContentModal>
   <div class="container">
     <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
-    <NoteForm
-      v-show="showForm"
-      @add-note="addNote"
-      @edit-note="editNote"
-      :noteToEdit="noteToEdit"
-    />
+    <!-- <NoteForm v-show="showForm" @add-note="addNote" :noteToEdit="noteToEdit" /> -->
     <NotesList
       :notes="notes"
       @get-edit-note-form="getEditNoteForm"
@@ -33,7 +34,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppHeader from "./components/AppHeader.vue";
-import NoteForm from "./components/NoteForm.vue";
+// import NoteForm from "./components/NoteForm.vue";
 import NotesList from "./components/NotesList.vue";
 import ContentModal from "./components/ContentModal.vue";
 
@@ -50,13 +51,13 @@ export default defineComponent({
   components: {
     AppHeader,
     NotesList,
-    NoteForm,
+
     ContentModal,
   },
   data() {
     return {
       notes: [] as Note[],
-      noteToEdit: {},
+      pinned: [] as Note[],
       showForm: false,
       showModal: false,
       noteIdToDelete: 0,
@@ -73,24 +74,19 @@ export default defineComponent({
         editedNote,
         ...this.notes.filter((note) => note.id !== editedNote.id),
       ];
-      this.noteToEdit = {};
     },
-    deleteNote() {
-      this.notes = this.notes.filter((note) => note.id !== this.noteIdToDelete);
-      this.noteIdToDelete = 0;
-      this.closeModal();
+    deleteNote(id: number) {
+      this.notes = this.notes.filter((note) => note.id !== id);
     },
     getEditNoteForm(id: number) {
       const note = this.notes.find((note) => note.id === id);
       if (note) {
-        this.noteToEdit = note;
         this.showForm = true;
         window.scroll(0, 0);
       }
     },
     toggleForm() {
       this.showForm = !this.showForm;
-      this.noteToEdit = {};
     },
     confirmDelete(id: number) {
       this.noteIdToDelete = id;

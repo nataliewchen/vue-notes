@@ -1,6 +1,6 @@
 <template>
   <ContentModal @backdrop-click="goBack">
-    <NoteForm @add-note="addNote" @edit-note="editNote" />
+    <NoteForm @handle-form="addNote" />
   </ContentModal>
 </template>
 
@@ -19,9 +19,10 @@ interface Note {
 export default defineComponent({
   name: "AddNoteView",
   components: { NoteForm, ContentModal },
+  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
   methods: {
     goBack() {
-      this.$router.back();
+      this.$router.push("/");
     },
     addNote(newNote: Note) {
       this.$emit("add-note", newNote);
