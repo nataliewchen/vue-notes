@@ -1,13 +1,15 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="onSubmit" data-test="form">
     <div class="form-control">
       <label for="title" hidden>Title:</label>
       <input
         type="text"
-        id="title"
         v-model="title"
+        id="title"
+        class="title"
         placeholder="Title"
-        required
+        name="title"
+        data-test="titleInput"
       />
     </div>
     <div class="form-control">
@@ -15,6 +17,7 @@
       <textarea
         rows="8"
         v-model="text"
+        id="text"
         placeholder="Type your note here..."
         required
       ></textarea>
@@ -43,9 +46,9 @@ export default defineComponent({
     };
   },
   computed: {
-    isEditing() {
-      return Object.entries(this.noteToEdit).length > 0;
-    },
+    // isEditing() {
+    //   return Object.entries(this.noteToEdit).length > 0;
+    // },
   },
   watch: {
     noteToEdit(newNote) {
@@ -61,7 +64,8 @@ export default defineComponent({
       const newNote = {
         title: this.title,
         text: this.text,
-        id: this.isEditing ? this.id : Date.now(), // keep same id if editing existing note
+        // id: this.isEditing ? this.id : Date.now(), // keep same id if editing existing note
+        id: Date.now(),
         lastUpdated: new Date(),
         pinned: this.pinned,
       };
@@ -69,11 +73,11 @@ export default defineComponent({
       this.title = "";
       this.text = "";
 
-      if (this.isEditing) {
-        this.$emit("edit-note", newNote);
-      } else {
-        this.$emit("add-note", newNote);
-      }
+      // if (this.isEditing) {
+      //   this.$emit("edit-note", newNote);
+      // } else {
+      this.$emit("add-note", newNote);
+      // }
     },
   },
 });
@@ -86,17 +90,15 @@ form {
 .form-control {
   margin-bottom: 10px;
 
-  input,
-  textarea {
-    width: 100%;
-    max-width: 400px;
+  textarea,
+  input {
+    max-width: 550px;
     font-family: inherit;
     padding: 8px;
-  }
-
-  textarea {
     resize: none;
     font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 

@@ -1,11 +1,7 @@
 <template>
   <div class="backdrop" @click="$emit('close-modal')">
-    <div class="confirm-delete-modal">
-      <h3>Are you sure you want to delete this note?</h3>
-      <div class="btn-group">
-        <button @click="$emit('close-modal')">Cancel</button>
-        <button @click="$emit('delete-note')" class="btn-red">Delete</button>
-      </div>
+    <div class="modal">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -15,13 +11,13 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "ConfirmDeleteModal",
+  name: "ContentModal",
 });
 </script>
 
 
 <style lang="scss" scoped>
-.confirm-delete-modal {
+.modal {
   border: 2px solid black;
   background-color: white;
   @include absolute-horizontal-center(25%);
@@ -29,10 +25,8 @@ export default defineComponent({
   padding: 30px 20px;
   max-width: 400px;
 
-  h3 {
-    text-align: center;
-    margin-top: 0;
-  }
+  text-align: center;
+  margin-top: 0;
 }
 
 .backdrop {

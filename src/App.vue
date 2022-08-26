@@ -1,9 +1,11 @@
 <template>
-  <ConfirmDeleteModal
-    @close-modal="closeModal"
-    @delete-note="deleteNote"
-    v-show="showModal"
-  />
+  <ContentModal v-show="showModal">
+    <h3>Are you sure you want to delete this note?</h3>
+    <div class="btn-group">
+      <button @click="closeModal">Cancel</button>
+      <button @click="deleteNote" class="btn-red">Delete</button>
+    </div>
+  </ContentModal>
   <div class="container">
     <AppHeader
       :showForm="showForm"
@@ -31,7 +33,7 @@ import { defineComponent } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import NoteForm from "./components/NoteForm.vue";
 import NotesList from "./components/NotesList.vue";
-import ConfirmDeleteModal from "./components/ConfirmDeleteModal.vue";
+import ContentModal from "./components/ContentModal.vue";
 
 interface Note {
   title: string;
@@ -47,7 +49,7 @@ export default defineComponent({
     AppHeader,
     NotesList,
     NoteForm,
-    ConfirmDeleteModal,
+    ContentModal,
   },
   data() {
     return {
@@ -144,6 +146,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: $gray5;
   margin: 30px;
+
+  @include mq(mobile) {
+    font-size: 80%;
+  }
 }
 
 .container {

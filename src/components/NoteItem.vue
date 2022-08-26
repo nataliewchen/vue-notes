@@ -1,5 +1,9 @@
 <template>
-  <div @click="onClick" :class="[showNote ? 'bring-to-front' : '', 'note']">
+  <div
+    @click="onClick"
+    :class="[showNote ? 'bring-to-front' : '', 'note']"
+    data-test="note"
+  >
     <div class="note-header">
       <div class="note-header-text">
         <h2 class="note-title">
@@ -17,14 +21,14 @@
           :btn="btn"
           @click.stop="$emit(btn.emit, note.id)"
         />
+        <IconButton :btn="buttons.edit" @click.stop="editNote" />
       </div>
-      <!-- <CollapsibleButtonGroup :showButtons="showButtons">
-      </CollapsibleButtonGroup> -->
     </div>
-    <div class="content">
-      <p :class="showNote ? 'full-text' : 'preview-text'">
-        {{ showNote ? note.text : previewText }}
-      </p>
+    <div
+      :class="[showNote ? 'full-text' : 'preview-text', 'note-text']"
+      :contenteditable="editable"
+    >
+      {{ showNote ? note.text : previewText }}
     </div>
   </div>
 </template>
@@ -32,7 +36,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import IconButton from "./IconButton.vue";
-import CollapsibleButtonGroup from "./CollapsibleButtonGroup.vue";
 import dayjs from "dayjs";
 
 export default defineComponent({
@@ -49,6 +52,7 @@ export default defineComponent({
     return {
       showNote: false,
       showButtons: false,
+      editable: false,
       buttons: {
         pin: {
           text: "pin",
@@ -83,8 +87,11 @@ export default defineComponent({
   },
   methods: {
     onClick() {
-      this.showNote = !this.showNote;
+      this.showNote = true;
       this.$emit("set-open-note", this.showNote ? this.note.id : 0);
+    },
+    editNote() {
+      this.editable = !this.editable;
     },
   },
   watch: {
@@ -119,7 +126,7 @@ export default defineComponent({
     @include flexbox(column, center, flex-start);
     gap: 10px;
   }
-  @include flexbox(row, space-between);
+  @include flexbox(row, space-between, center);
   margin-bottom: 5px;
 }
 
@@ -134,20 +141,14 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.note-title {
-  font-size: 1em;
-}
-
-h2,
-p {
+.note-title,
+.note-text {
   margin: 0;
 }
 
-h2 {
+.note-title {
+  font-size: 1.3em;
   @include flexbox(column, center, flex-start);
-  @include mq(tablet) {
-    @include flexbox();
-  }
 }
 
 .fa-thumbtack {
@@ -157,10 +158,6 @@ h2 {
 
 .last-updated {
   font-weight: 300;
-  font-size: 0.65em;
-
-  @include mq(tablet) {
-    margin-left: 8px;
-  }
+  font-size: 0.7em;
 }
 </style>

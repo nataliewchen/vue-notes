@@ -1,5 +1,5 @@
 <template>
-  <button :class="[btn.class, 'icon-button']">
+  <button @click="click" :class="[btn.class, 'icon-button']">
     <i :class="['fa-solid', btn.icon]"></i>
   </button>
 </template>

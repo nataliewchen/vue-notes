@@ -22,7 +22,7 @@ export default defineComponent({
   },
   watch: {
     detect(newDetect) {
-      // if detect is true, bring the screen to front
+      // if detect is true, bring the detection screen to front
       this.zIndex = newDetect ? 1 : -1;
     },
   },
