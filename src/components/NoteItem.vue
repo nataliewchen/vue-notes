@@ -4,7 +4,10 @@
       <div class="note-header-text">
         <h2 class="note-title">
           <span
-            ><i v-show="note.pinned" class="fa-solid fa-thumbtack"></i
+            ><i
+              v-show="note ? note.pinned : ''"
+              class="fa-solid fa-thumbtack"
+            ></i
             >{{ note.title }}</span
           >
           <span class="last-updated">{{ lastUpdated }}</span>

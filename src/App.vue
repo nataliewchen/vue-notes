@@ -104,38 +104,49 @@ body {
   background-color: black;
   #app {
     color: white;
-  }
 
-  .container {
-    border-color: white;
-  }
+    .container {
+      border-color: white;
+    }
 
-  .note {
-    background-color: $gray5;
-    &:hover {
+    .note {
+      background-color: $gray5;
+      &:hover {
+        background-color: $gray4;
+      }
+    }
+
+    .toggle-btn {
+      background-color: white;
+
+      i {
+        color: $gray5;
+      }
+    }
+
+    .slider {
+      background-color: $gray5;
+    }
+
+    .circle:hover {
+      background-color: $gray3;
+    }
+
+    .backdrop {
       background-color: $gray4;
     }
-  }
 
-  .toggle-btn {
-    background-color: white;
-
-    i {
-      color: $gray5;
+    .modal {
+      background-color: black;
+      border-color: white;
     }
-  }
 
-  .slider {
-    background-color: $gray5;
-  }
-
-  .circle:hover {
-    background-color: $gray3;
-  }
-
-  .confirm-delete-modal {
-    background-color: black;
-    border-color: white;
+    #text,
+    #title {
+      background-color: black;
+      color: white;
+      border-color: white;
+    }
   }
 }
 
