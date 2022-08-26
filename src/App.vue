@@ -37,14 +37,7 @@ import AppHeader from "./components/AppHeader.vue";
 // import NoteForm from "./components/NoteForm.vue";
 import NotesList from "./components/NotesList.vue";
 import ContentModal from "./components/ContentModal.vue";
-
-interface Note {
-  title: string;
-  text: string;
-  id: number;
-  lastUpdated: Date;
-  pinned: boolean;
-}
+import { Note } from "./types/custom-types.js";
 
 export default defineComponent({
   name: "App",

@@ -4,6 +4,7 @@
       <IconButton
         :btn="buttons.pin"
         @click.stop="$emit('toggle-pin', note.id)"
+        :class="note.pinned ? 'btn-orange' : ''"
       />
       <IconButton
         :btn="isEditing ? buttons.save : buttons.edit"
@@ -34,7 +35,7 @@
     <br />
     <p class="note-text" :contenteditable="editable">{{ note.text }}</p>-->
   </ContentModal>
-  <ContentModal v-show="showDeleteModal">
+  <ContentModal v-show="showDeleteModal" @backdrop-click="closeDeleteModal">
     <h3>Are you sure you want to delete this note?</h3>
     <div class="btn-group">
       <button @click="closeDeleteModal">Cancel</button>
@@ -105,8 +106,8 @@ export default defineComponent({
       this.showDeleteModal = false;
     },
     editNote(newNote: Note) {
-      this.$emit("edit-note", newNote);
-      //window.location.reload();
+      const pinned = this.note.pinned;
+      this.$emit("edit-note", { ...newNote, pinned: this.note.pinned });
       this.$router.push("/");
     },
     submitForm() {
@@ -145,7 +146,7 @@ export default defineComponent({
     notes(newNotes) {
       const note = newNotes.find((note: Note) => note.id === this.note.id);
       if (note) {
-        console.log(note.pinned);
+        this.note = note;
         this.buttons.pin.class = note.pinned ? "btn-orange" : "";
       }
     },

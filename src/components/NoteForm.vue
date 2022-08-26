@@ -46,11 +46,11 @@ export default defineComponent({
   emits: ["handle-form"],
   data() {
     return {
-      title: this.noteData.title ? this.noteData.title : "",
-      text: this.noteData.text ? this.noteData.text : "",
-      id: this.noteData.id ? this.noteData.id : Number,
-      lastUpdated: this.noteData.lastUpdated ? this.noteData.lastUpdated : Date,
-      pinned: this.noteData.pinned,
+      title: this.noteData ? this.noteData.title : "",
+      text: this.noteData ? this.noteData.text : "",
+      id: this.noteData ? this.noteData.id : Number,
+      lastUpdated: this.noteData ? this.noteData.lastUpdated : Date,
+      pinned: this.noteData ? this.noteData.pinned : false,
     };
   },
   computed: {
@@ -58,15 +58,6 @@ export default defineComponent({
       return Boolean(this.noteData);
     },
   },
-  // mounted() {
-  //   if (this.noteData) {
-  //     this.title = this.noteData.title;
-  //     this.text = this.noteData.text;
-  //     this.id = this.noteData.id;
-  //     this.lastUpdated = this.noteData.lastUpdated;
-  //     this.pinned = this.noteData.pinned;
-  //   }
-  // },
   watch: {
     isEditing(newIsEditing) {
       if (newIsEditing) {
@@ -86,8 +77,6 @@ export default defineComponent({
         lastUpdated: new Date(),
         pinned: this.pinned,
       };
-
-      console.log("new note", newNote);
 
       this.title = "";
       this.text = "";
