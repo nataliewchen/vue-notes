@@ -1,5 +1,5 @@
 <template>
-  <button @click="click" :class="[btn.class ? btn.class : '', 'icon-button']">
+  <button :class="[btn.class ? btn.class : '', 'icon-button']">
     <i :class="['fa-solid', btn.icon]"></i>
     <span class="btn-text">&nbsp; {{ btn.text }}</span>
   </button>
@@ -8,12 +8,15 @@
 
 <script>
 import { defineComponent } from "vue";
-import { FontAwesomeIconButton } from "../types/custom-types.ts";
+import { FontAwesomeIconButton } from "../../types/custom-types.ts";
 
 export default defineComponent({
   name: "IconButton",
   props: {
-    btn: FontAwesomeIconButton,
+    btn: {
+      type: FontAwesomeIconButton,
+      required: true,
+    },
   },
 });
 </script>

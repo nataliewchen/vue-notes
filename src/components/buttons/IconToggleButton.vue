@@ -1,8 +1,6 @@
 <template>
   <div @click="toggleSlider" class="toggle-btn">
-    <div class="icon">
-      <i :class="['fa-solid', icons.false]"></i>
-    </div>
+    <i :class="['fa-solid', icons.false]"></i>
     <div class="slider"></div>
     <i :class="['fa-solid', icons.true]"></i>
   </div>
@@ -14,25 +12,30 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ToggleButton",
-  props: ["icons", "condition"],
+  props: {
+    icons: {
+      type: Object,
+      required: true,
+    },
+    condition: {
+      type: Boolean,
+      required: true,
+    },
+  },
   emits: ["toggle-click"],
   methods: {
     toggleSlider() {
-      const slider = document.querySelector(".slider");
-      if (slider) {
-        slider.classList.toggle("slider-left");
-      }
-
+      document.querySelector(".slider").classList.toggle("slider-left");
       this.$emit("toggle-click");
     },
   },
   watch: {
     condition() {
-      const slider = document.querySelector(".slider");
+      // watch for load from localstorage
       if (this.condition) {
-        slider.classList.add("slider-left");
+        document.querySelector(".slider").classList.add("slider-left");
       } else {
-        slider.classList.remove("slider-left");
+        document.querySelector(".slider").classList.remove("slider-left");
       }
     },
   },

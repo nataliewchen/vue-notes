@@ -1,9 +1,7 @@
 <template>
-  <div class="container">
-    <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
-    <SearchBar @search-notes="searchNotes" />
-    <NotesList :notes="notes" :filteredNotes="filteredNotes" />
-  </div>
+  <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
+  <SearchBar @query-change="searchNotes" />
+  <NotesList :notes="notes" :filteredNotes="filteredNotes" />
   <router-view
     :notes="notes"
     @add-note="addNote"
@@ -32,28 +30,20 @@ export default defineComponent({
   },
   methods: {
     addNote(newNote: Note) {
-      this.notes = [newNote, ...this.notes];
-    },
-    editNote(editedNote: Note) {
-      this.notes = [
-        editedNote,
-        ...this.notes.filter((note) => note.id !== editedNote.id),
-      ];
+      this.notes = [newNote, ...this.notes]; // most recent first
     },
     deleteNote(id: number) {
       this.notes = this.notes.filter((note) => note.id !== id);
     },
-    togglePin(id: number) {
-      this.notes = this.notes.map((note) =>
-        note.id === id ? { ...note, pinned: !note.pinned } : note
-      );
-    },
-    toggleDarkMode() {
-      this.darkMode = !this.darkMode;
+    editNote(editedNote: Note) {
+      this.notes = [
+        editedNote,
+        ...this.notes.filter((note) => note.id !== editedNote.id), // most recently updated first
+      ];
     },
     searchNotes(query: string) {
       if (!query) {
-        this.filteredNotes = this.notes;
+        this.filteredNotes = this.notes; // show all notes
       } else {
         const filtered = this.notes.filter(
           (note: Note) =>
@@ -63,12 +53,16 @@ export default defineComponent({
         this.filteredNotes = filtered;
       }
     },
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+    },
+    togglePin(id: number) {
+      this.notes = this.notes.map((note) =>
+        note.id === id ? { ...note, pinned: !note.pinned } : note
+      );
+    },
   },
   watch: {
-    notes(newNotes) {
-      localStorage.setItem("notes", JSON.stringify(newNotes));
-      this.filteredNotes = newNotes;
-    },
     darkMode(newDarkMode) {
       localStorage.setItem("darkMode", newDarkMode);
       if (newDarkMode) {
@@ -76,6 +70,10 @@ export default defineComponent({
       } else {
         document.body.classList.remove("dark-mode");
       }
+    },
+    notes(newNotes) {
+      localStorage.setItem("notes", JSON.stringify(newNotes));
+      this.filteredNotes = newNotes;
     },
   },
   mounted() {

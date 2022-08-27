@@ -14,7 +14,7 @@ const routes = [
       },
       {
         path: ':id',
-        component: NoteDetailView
+        component: NoteDetailView,
       }
     ]
   },

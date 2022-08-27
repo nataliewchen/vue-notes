@@ -1,27 +1,23 @@
 <template>
   <form
     @submit.prevent="onSubmit"
-    data-test="form"
-    ref="form"
-    :class="isViewing && !isEditing ? 'read-only' : ''"
+    :class="existingNote && !isEditing ? 'read-only' : ''"
   >
-    <h2 class="form-title" v-if="!isViewing">new note</h2>
-
-    <div class="form-control">
+    <h2 class="form-title" v-if="!existingNote">new note</h2>
+    <div class="form-control" @dblclick="$emit('focus-input', e)">
       <label for="title" hidden>Title:</label>
       <input
         type="text"
         v-model="title"
         id="title"
-        class="title"
-        :placeholder="isViewing ? '' : 'Title'"
+        :placeholder="
+          existingNote ? (noteData.title ? noteData.title : '') : 'Title'
+        "
         name="title"
-        data-test="titleInput"
-        :readonly="isViewing && !isEditing"
-        @dblclick="makeEditable"
+        :readonly="existingNote && !isEditing"
       />
     </div>
-    <div class="form-control">
+    <div class="form-control" @dblclick="$emit('focus-input', e)">
       <label for="text" hidden>Text:</label>
       <textarea
         rows="10"
@@ -29,23 +25,26 @@
         id="text"
         placeholder="Type your note here..."
         required
-        :readonly="isViewing && !isEditing"
+        :readonly="existingNote && !isEditing"
       ></textarea>
     </div>
-    <button v-show="!isViewing" class="btn-green submit-form">save</button>
+    <button v-show="!existingNote" class="btn-green submit-form">save</button>
   </form>
 </template>
 
 
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
+import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "NoteForm",
-  components: {},
-  props: ["noteData", "isEditing"],
-  emits: ["handle-form"],
+  props: {
+    noteData: Object as PropType<Note>,
+    isEditing: Boolean,
+  },
+  emits: ["handle-form", "focus-input"],
   data() {
     return {
       title: this.noteData ? this.noteData.title : "",
@@ -55,34 +54,29 @@ export default defineComponent({
       pinned: this.noteData ? this.noteData.pinned : false,
     };
   },
+  methods: {
+    onSubmit() {
+      const newNote = {
+        title: this.title,
+        text: this.text,
+        id: this.existingNote ? this.id : Date.now(), // keep same id if editing existing note
+        lastUpdated: new Date(),
+        pinned: this.pinned,
+      };
+
+      this.$emit("handle-form", newNote);
+    },
+  },
   computed: {
-    isViewing() {
+    existingNote() {
       return Boolean(this.noteData);
     },
   },
   watch: {
     isEditing(newIsEditing) {
       if (newIsEditing) {
-        const textarea = document.querySelector("#text") as HTMLElement | null;
-        if (textarea) {
-          textarea.focus();
-        }
+        (document.querySelector("#text") as HTMLElement).focus();
       }
-    },
-  },
-  methods: {
-    onSubmit() {
-      const newNote = {
-        title: this.title,
-        text: this.text,
-        id: this.isViewing ? this.id : Date.now(), // keep same id if editing existing note
-        lastUpdated: new Date(),
-        pinned: this.pinned,
-      };
-
-      this.title = "";
-      this.text = "";
-      this.$emit("handle-form", newNote);
     },
   },
 });
@@ -94,13 +88,12 @@ export default defineComponent({
   font-weight: 600;
 }
 
-.read-only input:focus,
-.read-only textarea:focus {
-  outline: none;
-}
-
 .read-only input,
 .read-only textarea {
   border-color: #00000000;
+
+  &:focus {
+    outline: none;
+  }
 }
 </style>

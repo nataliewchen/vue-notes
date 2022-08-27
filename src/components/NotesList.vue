@@ -1,29 +1,44 @@
 <template>
   <div class="notes-list">
     <div class="no-notes">
-      {{ sortedNotesByPin.length === 0 ? "no notes found" : "" }}
+      {{
+        filteredNotes.length === 0 && notes.length > 0 ? "no notes found" : ""
+      }}
     </div>
-    <NoteItem v-for="note in sortedNotesByPin" :key="note.id" :note="note" />
+    <NoteItem v-for="note in pinnedNotes" :key="note.id" :note="note" />
+    <hr v-if="pinnedNotes.length && unpinnedNotes.length" />
+    <NoteItem v-for="note in unpinnedNotes" :key="note.id" :note="note" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import NoteItem from "./NoteItem.vue";
 import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "NotesList",
   components: { NoteItem },
-  props: ["notes", "filteredNotes"],
+  props: {
+    notes: {
+      type: Array as PropType<Note[]>,
+      required: true,
+    },
+    filteredNotes: {
+      type: Array as PropType<Note[]>,
+      required: true,
+    },
+  },
   computed: {
-    sortedNotesByPin() {
+    pinnedNotes() {
       const pinned = this.filteredNotes.filter((note: Note) => note.pinned);
       pinned.sort(
         (a: Note, b: Note) => (a.lastUpdated > b.lastUpdated ? -1 : 1) // most recent first
       );
-      const unpinned = this.filteredNotes.filter((note: Note) => !note.pinned);
-      return [...pinned, ...unpinned];
+      return pinned;
+    },
+    unpinnedNotes() {
+      return this.filteredNotes.filter((note: Note) => !note.pinned);
     },
   },
 });
@@ -31,11 +46,15 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .notes-list {
-  margin-top: 50px;
+  margin-top: 30px;
 
   @include mq(tablet) {
     padding: 0 20px;
   }
+}
+
+hr {
+  margin: 15px 0;
 }
 
 .no-notes {

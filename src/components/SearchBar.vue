@@ -5,7 +5,6 @@
     <input type="text" id="query" v-model="query" placeholder="Search" />
     <HoverCircleButton
       data-test="clear-search"
-      class="clear-search"
       icon="fa-xmark"
       @click="clearSearch"
     />
@@ -15,32 +14,28 @@
 
 <script>
 import { defineComponent } from "vue";
-import HoverCircleButton from "./HoverCircleButton.vue";
-
-console.log(document.querySelector("button"));
+import HoverCircleButton from "./buttons/HoverCircleButton.vue";
 
 export default defineComponent({
   name: "SearchBar",
   components: { HoverCircleButton },
+  emits: ["query-change"],
   data() {
     return {
       query: "",
     };
   },
   methods: {
-    focusSearch() {
-      const search = document.querySelector("#query");
-      if (search) {
-        search.focus();
-      }
-    },
     clearSearch() {
       this.query = "";
+    },
+    focusSearch() {
+      document.querySelector("#query").focus();
     },
   },
   watch: {
     query() {
-      this.$emit("search-notes", this.query);
+      this.$emit("query-change", this.query);
     },
   },
 });
@@ -54,8 +49,11 @@ export default defineComponent({
 
 #query {
   padding-left: 35px;
+  @include mq(mobile) {
+    padding-left: 25px;
+  }
 }
-.clear-search {
+.hover-circle-btn {
   position: absolute;
   right: 0px;
   scale: 0.6;
@@ -74,7 +72,7 @@ export default defineComponent({
   left: 60px;
 
   @include mq(mobile) {
-    display: none;
+    left: 25px;
   }
 }
 </style>

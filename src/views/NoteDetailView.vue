@@ -1,28 +1,27 @@
 <template>
   <ContentModal @backdrop-click="confirmClose" :closeOnBackdropClick="false">
     <header>
-      <div class="btn-header">
-        <div class="btn-group">
-          <IconButton
-            :btn="note.pinned ? buttons.unpin : buttons.pin"
-            @click.stop="$emit('toggle-pin', note.id)"
-            :class="note.pinned ? 'btn-orange' : ''"
-          />
-          <IconButton
-            :btn="isEditing ? buttons.save : buttons.edit"
-            @click.stop="toggleEditing"
-          />
-          <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
-        </div>
+      <div class="btn-header btn-group">
+        <IconButton
+          :btn="note.pinned ? buttons.unpin : buttons.pin"
+          @click.stop="$emit('toggle-pin', note.id)"
+          :class="note.pinned ? 'btn-orange' : ''"
+        />
+        <IconButton
+          :btn="isEditing ? buttons.save : buttons.edit"
+          @click.stop="toggleEditing"
+        />
+        <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
       </div>
       <div class="last-updated">last updated: {{ lastUpdated }}</div>
     </header>
+    {{ note }}
     <NoteForm
+      v-if="note"
       :noteData="note"
       :isEditing="isEditing"
       @handle-form="editNote"
-      @toggle-editing="toggleEditing"
-      @dblclick="toggleEditing"
+      @focus-input="focusInput"
     />
   </ContentModal>
   <ContentModal
@@ -38,7 +37,7 @@
     </div>
   </ContentModal>
   <ContentModal
-    v-show="showConfirmCloseModal"
+    v-show="showExitModal"
     @backdrop-click="backToEditing"
     :small="true"
     :transparent="true"
@@ -52,33 +51,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import dayjs from "dayjs";
 import ContentModal from "../components/ContentModal.vue";
-import IconButton from "../components/IconButton.vue";
+import IconButton from "../components/buttons/IconButton.vue";
 import NoteForm from "../components/NoteForm.vue";
 import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "NoteDetailView",
   components: { ContentModal, IconButton, NoteForm },
-  props: ["notes"],
-  emits: [
-    "add-note",
-    "toggle-pin",
-    "edit-note",
-    "delete-note",
-    "toggle-editing",
-  ],
-
+  props: {
+    notes: {
+      type: Object as PropType<Note[]>,
+      required: true,
+    },
+  },
+  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
   data() {
     return {
-      note: this.notes.find(
-        (note: Note) => note.id === Number(this.$route.params.id)
-      ),
+      // note: this.notes.find(
+      //   (note: Note) => note.id === Number(this.$route.params.id)
+      // ),
+      note: {
+        title: "",
+        text: "",
+        id: 0,
+        lastUpdated: new Date(),
+        pinned: false,
+      },
       isEditing: false,
       showDeleteModal: false,
-      showConfirmCloseModal: false,
+      showExitModal: false,
       buttons: {
         pin: {
           text: "pin",
@@ -108,24 +112,36 @@ export default defineComponent({
       },
     };
   },
+  created() {
+    console.log("created");
+    console.log(this.notes);
+    // this.$router.push("/");
+    // this.$router.push(this.$route.params.id.toString());
+    const note = this.notes.find(
+      (note: Note) => note.id === Number(this.$route.params.id)
+    );
+    if (note) {
+      console.log(note);
+      this.note = note;
+    }
+  },
   computed: {
     lastUpdated() {
-      return dayjs(this.note.lastUpdated).format("M/DD/YY hh:mm a");
+      return dayjs(this.note?.lastUpdated).format("M/DD/YY hh:mm a");
     },
   },
   methods: {
     confirmClose() {
       if (this.isEditing) {
-        this.showConfirmCloseModal = true;
+        this.showExitModal = true; // ask user if they want to exit without saving
       } else {
-        //if unsaved changes
-        const text = document.querySelector("#text") as HTMLInputElement | null;
-        const title = document.querySelector(
-          "#title"
-        ) as HTMLTextAreaElement | null;
+        // user made changes and shallow "saved" them (inputs are read-only but state hasn't been updated yet)
+        // only submit form if the content is actually different (otherwise lastUpdated will still be updated)
         if (
-          (text && text.value !== this.note.text) ||
-          (title && title.value !== this.note.title)
+          (document.querySelector("#title") as HTMLInputElement).value !==
+            this.note?.title ||
+          (document.querySelector("#text") as HTMLTextAreaElement).value !==
+            this.note?.text
         ) {
           this.submitForm();
         }
@@ -133,38 +149,34 @@ export default defineComponent({
       }
     },
     editNote(newNote: Note) {
-      const pinned = this.note.pinned;
-      this.$emit("edit-note", { ...newNote, pinned: this.note.pinned });
+      const pinned = this.note?.pinned;
+      this.$emit("edit-note", { ...newNote, pinned: this.note?.pinned });
       this.$router.push("/");
     },
     submitForm() {
-      const submitBtn = document.querySelector(
-        ".submit-form"
-      ) as HTMLElement | null;
-      if (submitBtn) {
-        submitBtn.click();
-      }
+      (document.querySelector(".submit-form") as HTMLElement).click();
     },
     toggleEditing() {
       this.isEditing = !this.isEditing;
-      // if (!this.isEditing) {
-      //   this.submitForm();
-      //   this.$router.push(`${this.note.id}`);
-      // }
     },
     confirmDelete() {
       this.showDeleteModal = true;
     },
     deleteNote() {
-      this.$emit("delete-note", this.note.id);
+      this.$emit("delete-note", this.note?.id);
       this.$router.push("/");
     },
     backToEditing() {
       this.showDeleteModal = false;
-      this.showConfirmCloseModal = false;
+      this.showExitModal = false;
     },
     discardChanges() {
       this.$router.push("/");
+    },
+    focusInput(e: Event) {
+      console.log(e);
+      // (e.target as HTMLElement).focus();
+      // this.isEditing = true;
     },
   },
   watch: {
@@ -179,7 +191,9 @@ export default defineComponent({
       }
     },
     notes(newNotes) {
-      const note = newNotes.find((note: Note) => note.id === this.note.id);
+      console.log("notes changed");
+      // detect updates from note 'database' and update data to refresh UI
+      const note = newNotes.find((note: Note) => note.id === this.note?.id);
       if (note) {
         this.note = note;
       }

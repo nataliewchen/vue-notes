@@ -1,19 +1,12 @@
 <template>
-  <div @click="onClick" class="note" data-test="note">
-    <div class="note-header">
-      <div class="note-header-text">
-        <h2 class="note-title">
-          <span
-            ><i
-              v-show="note ? note.pinned : ''"
-              class="fa-solid fa-thumbtack"
-            ></i
-            >{{ note.title }}</span
-          >
-          <span class="last-updated">{{ lastUpdated }}</span>
-        </h2>
-      </div>
-    </div>
+  <div @click="onClick" class="note-item">
+    <h2 class="note-title">
+      <span
+        ><i v-show="note ? note.pinned : ''" class="fa-solid fa-thumbtack"></i
+        >{{ note.title }}</span
+      >
+      <span class="last-updated">{{ lastUpdated }}</span>
+    </h2>
     <div class="preview-text">
       {{ previewText }}
     </div>
@@ -21,12 +14,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import dayjs from "dayjs";
+import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "NoteItem",
-  props: ["note"],
+  props: {
+    note: {
+      type: Object as PropType<Note>,
+      required: true,
+    },
+  },
   computed: {
     lastUpdated() {
       return dayjs(this.note.lastUpdated).format("M/DD/YY");
@@ -46,27 +45,16 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.note {
+.note-item {
   background-color: $gray1;
   padding: 15px;
   margin-bottom: 10px;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  user-select: none;
+  overflow: hidden;
 
   &:hover {
     cursor: pointer;
     background-color: $gray2;
   }
-}
-
-.note-header {
-  @include mq(mobile) {
-    @include flexbox(column, center, flex-start);
-    gap: 10px;
-  }
-  @include flexbox(row, space-between, center);
-  margin-bottom: 5px;
 }
 
 .preview-text {
@@ -75,13 +63,12 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.note-title,
-.note-text {
-  margin: 0;
-}
-
 .note-title {
   font-size: 1.3em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0;
   @include flexbox(column, center, flex-start);
 }
 
@@ -92,6 +79,6 @@ export default defineComponent({
 
 .last-updated {
   font-weight: 300;
-  font-size: 0.7em;
+  font-size: 0.6em;
 }
 </style>

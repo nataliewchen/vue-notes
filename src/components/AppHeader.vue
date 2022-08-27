@@ -4,28 +4,29 @@
       <h1>notes</h1>
       <HoverCircleButton icon="fa-plus" @click="openForm" />
     </div>
-    <div class="mode-toggle">
-      <IconToggleButton
-        :icons="toggleIcons"
-        :condition="darkMode"
-        @toggle-click="$emit('toggle-dark-mode')"
-      />
-    </div>
+    <IconToggleButton
+      :icons="toggleIcons"
+      :condition="darkMode"
+      @toggle-click="$emit('toggle-dark-mode')"
+    />
   </header>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import IconToggleButton from "./IconToggleButton.vue";
-import HoverCircleButton from "./HoverCircleButton.vue";
+import IconToggleButton from "./buttons/IconToggleButton.vue";
+import HoverCircleButton from "./buttons/HoverCircleButton.vue";
 
 export default defineComponent({
   name: "AppHeader",
   components: { IconToggleButton, HoverCircleButton },
-  props: {
-    darkMode: Boolean,
-  },
   emits: ["toggle-dark-mode"],
+  props: {
+    darkMode: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       toggleIcons: {
@@ -46,22 +47,10 @@ export default defineComponent({
 .header-top {
   @include flexbox(row, space-between);
 }
+
 h1 {
   font-weight: 700;
   font-size: 2.5em;
   margin: 0;
-}
-
-i {
-  font-size: 1.9em;
-  @include absolute-center();
-}
-
-.circle {
-  @include circle(50px);
-  position: relative;
-  &:hover {
-    background-color: $gray1;
-  }
 }
 </style>

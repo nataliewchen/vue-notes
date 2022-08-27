@@ -6,12 +6,14 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import IconToggleButton from "./IconToggleButton.vue";
 
 export default defineComponent({
   name: "HoverCircleButton",
   props: {
-    icon: String,
+    icon: {
+      type: String,
+      required: true,
+    },
   },
 });
 </script>

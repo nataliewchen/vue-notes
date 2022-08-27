@@ -17,27 +17,20 @@ export default defineComponent({
 body {
   overflow-x: hidden;
   overflow-y: scroll;
-  margin: 0;
+  margin: 30px;
 }
 
 #app {
   font-family: "Mulish", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $gray5;
-  margin: 30px;
-
-  @include mq(mobile) {
-    font-size: 80%;
-  }
-}
-
-.container {
+  margin: 0 auto;
   border: 2px solid $gray5;
   max-width: 600px;
   padding: 20px 10px;
-  @include mq(tablet) {
-    @include margin-auto();
+
+  @include mq(mobile) {
+    font-size: 90%;
   }
 }
 
@@ -45,12 +38,9 @@ body {
   background-color: black;
   #app {
     color: white;
+    border-color: white;
 
-    .container {
-      border-color: white;
-    }
-
-    .note {
+    .note-item {
       background-color: $gray5;
       &:hover {
         background-color: $gray4;
@@ -92,10 +82,6 @@ body {
   }
 }
 
-.hover {
-  cursor: pointer;
-}
-
 button {
   border-radius: 5px;
   border: none;
@@ -107,7 +93,7 @@ button {
 }
 
 button:hover {
-  scale: 1.1;
+  scale: 1.05;
 }
 
 i:hover {
@@ -136,11 +122,6 @@ i:hover {
 }
 .btn-orange {
   background-color: $orange;
-}
-
-.bring-to-front {
-  position: relative;
-  z-index: 2;
 }
 
 .transparent {
