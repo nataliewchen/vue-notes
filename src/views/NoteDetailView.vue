@@ -15,7 +15,6 @@
       </div>
       <div class="last-updated">last updated: {{ lastUpdated }}</div>
     </header>
-    {{ note }}
     <NoteForm
       v-if="note"
       :noteData="note"
@@ -174,9 +173,8 @@ export default defineComponent({
       this.$router.push("/");
     },
     focusInput(e: Event) {
-      console.log(e);
-      // (e.target as HTMLElement).focus();
-      // this.isEditing = true;
+      (e.target as HTMLElement).focus();
+      this.isEditing = true;
     },
   },
   watch: {

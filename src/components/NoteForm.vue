@@ -4,7 +4,7 @@
     :class="existingNote && !isEditing ? 'read-only' : ''"
   >
     <h2 class="form-title" v-if="!existingNote">new note</h2>
-    <div class="form-control" @dblclick="$emit('focus-input', e)">
+    <div class="form-control" @dblclick="focus">
       <label for="title" hidden>Title:</label>
       <input
         type="text"
@@ -17,7 +17,7 @@
         :readonly="existingNote && !isEditing"
       />
     </div>
-    <div class="form-control" @dblclick="$emit('focus-input', e)">
+    <div class="form-control" @dblclick="focus">
       <label for="text" hidden>Text:</label>
       <textarea
         rows="10"
@@ -66,17 +66,13 @@ export default defineComponent({
 
       this.$emit("handle-form", newNote);
     },
+    focus(e: Event) {
+      this.$emit("focus-input", e);
+    },
   },
   computed: {
     existingNote() {
       return Boolean(this.noteData);
-    },
-  },
-  watch: {
-    isEditing(newIsEditing) {
-      if (newIsEditing) {
-        (document.querySelector("#text") as HTMLElement).focus();
-      }
     },
   },
 });
