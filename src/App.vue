@@ -113,11 +113,11 @@ i:hover {
 .btn-group {
   @include flexbox();
   gap: 0.8em;
+  width: 100%;
 
   > * {
     flex: 1 1 0px;
     white-space: nowrap;
-    /* text-align: center; */
   }
 }
 

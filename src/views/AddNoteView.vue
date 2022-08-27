@@ -4,7 +4,7 @@
   </ContentModal>
   <ContentModal
     v-show="showConfirmCloseModal"
-    @backdrop-click="closeConfirmCloseModal"
+    @backdrop-click="backToAdd"
     :small="true"
     :transparent="true"
   >
@@ -54,9 +54,6 @@ export default defineComponent({
     addNote(newNote: Note) {
       this.$emit("add-note", newNote);
       this.$router.push("/");
-    },
-    closeConfirmCloseModal() {
-      this.showConfirmCloseModal = false;
     },
     backToAdd() {
       this.showConfirmCloseModal = false;

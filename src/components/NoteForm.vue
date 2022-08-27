@@ -18,6 +18,7 @@
         name="title"
         data-test="titleInput"
         :readonly="isViewing && !isEditing"
+        @dblclick="makeEditable"
       />
     </div>
     <div class="form-control">

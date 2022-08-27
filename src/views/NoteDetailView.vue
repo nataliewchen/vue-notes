@@ -1,33 +1,39 @@
 <template>
-  <ContentModal @backdrop-click="closeModal" :closeOnBackdropClick="false">
+  <ContentModal @backdrop-click="confirmClose" :closeOnBackdropClick="false">
     <header>
       <div class="btn-header">
         <div class="btn-group">
           <IconButton
-            :btn="buttons.pin"
+            :btn="note.pinned ? buttons.unpin : buttons.pin"
             @click.stop="$emit('toggle-pin', note.id)"
             :class="note.pinned ? 'btn-orange' : ''"
           />
-          <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
           <IconButton
             :btn="isEditing ? buttons.save : buttons.edit"
             @click.stop="toggleEditing"
           />
+          <IconButton :btn="buttons.delete" @click.stop="confirmDelete" />
         </div>
       </div>
       <div class="last-updated">last updated: {{ lastUpdated }}</div>
     </header>
-    <NoteForm :noteData="note" :isEditing="isEditing" @handle-form="editNote" />
+    <NoteForm
+      :noteData="note"
+      :isEditing="isEditing"
+      @handle-form="editNote"
+      @toggle-editing="toggleEditing"
+      @dblclick="toggleEditing"
+    />
   </ContentModal>
   <ContentModal
     v-show="showDeleteModal"
-    @backdrop-click="closeDeleteModal"
+    @backdrop-click="backToEditing"
     :small="true"
     :transparent="true"
   >
     <h3>Are you sure you want to delete this note?</h3>
     <div class="btn-group">
-      <button @click="closeDeleteModal">Cancel</button>
+      <button @click="backToEditing">Cancel</button>
       <button @click="deleteNote" class="btn-red">Delete</button>
     </div>
   </ContentModal>
@@ -57,7 +63,13 @@ export default defineComponent({
   name: "NoteDetailView",
   components: { ContentModal, IconButton, NoteForm },
   props: ["notes"],
-  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
+  emits: [
+    "add-note",
+    "toggle-pin",
+    "edit-note",
+    "delete-note",
+    "toggle-editing",
+  ],
 
   data() {
     return {
@@ -71,6 +83,11 @@ export default defineComponent({
         pin: {
           text: "pin",
           class: "",
+          icon: "fa-thumbtack",
+        },
+        unpin: {
+          text: "unpin",
+          class: "btn-orange",
           icon: "fa-thumbtack",
         },
         edit: {
@@ -97,15 +114,23 @@ export default defineComponent({
     },
   },
   methods: {
-    closeModal() {
+    confirmClose() {
       if (this.isEditing) {
         this.showConfirmCloseModal = true;
       } else {
+        //if unsaved changes
+        const text = document.querySelector("#text") as HTMLInputElement | null;
+        const title = document.querySelector(
+          "#title"
+        ) as HTMLTextAreaElement | null;
+        if (
+          (text && text.value !== this.note.text) ||
+          (title && title.value !== this.note.title)
+        ) {
+          this.submitForm();
+        }
         this.$router.push("/");
       }
-    },
-    closeDeleteModal() {
-      this.showDeleteModal = false;
     },
     editNote(newNote: Note) {
       const pinned = this.note.pinned;
@@ -122,6 +147,10 @@ export default defineComponent({
     },
     toggleEditing() {
       this.isEditing = !this.isEditing;
+      // if (!this.isEditing) {
+      //   this.submitForm();
+      //   this.$router.push(`${this.note.id}`);
+      // }
     },
     confirmDelete() {
       this.showDeleteModal = true;
@@ -131,6 +160,7 @@ export default defineComponent({
       this.$router.push("/");
     },
     backToEditing() {
+      this.showDeleteModal = false;
       this.showConfirmCloseModal = false;
     },
     discardChanges() {
@@ -152,7 +182,6 @@ export default defineComponent({
       const note = newNotes.find((note: Note) => note.id === this.note.id);
       if (note) {
         this.note = note;
-        this.buttons.pin.class = note.pinned ? "btn-orange" : "";
       }
     },
   },
@@ -162,14 +191,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .btn-header {
   @include flexbox(row, space-between, center);
-  margin-bottom: 10px;
+  margin: 30px 0 10px;
 }
 
 header {
   padding: 0;
-
-  .last-updated {
-    text-align: left;
-  }
 }
 </style>
