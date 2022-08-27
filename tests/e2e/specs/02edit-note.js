@@ -2,6 +2,14 @@
 
 describe('Edit Note', () => {
   it('can edit an existing note', () => {
+     // create new note
+     cy.visit('/new')
+     cy.get('#title').type('new note')
+     cy.get('#text').type('sample note text')
+     cy.get('form').submit()
+ 
+
+
     cy.get('.note').click()
     
     cy.get('.btn-header').should('be.visible')

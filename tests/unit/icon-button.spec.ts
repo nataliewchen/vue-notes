@@ -6,7 +6,8 @@ test('emits an event when clicked', async () => {
     props: {
       btn: {
         class: 'btn-red',
-        icon: 'fa-x'
+        icon: 'fa-x',
+        text: 'test'
       }
     }
   });

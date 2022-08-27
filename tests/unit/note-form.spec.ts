@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import NoteForm from '@/components/NoteForm.vue';
 
-test('sets the value', async () => {
+test('sets the title value', async () => {
   const wrapper = shallowMount(NoteForm);
   const input = wrapper.find('input');
 
@@ -9,4 +9,8 @@ test('sets the value', async () => {
 
   expect(input.element.value).toBe('sample title');
 })
+
+
+
+
 

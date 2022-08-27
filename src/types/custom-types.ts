@@ -5,3 +5,9 @@ export interface Note {
   lastUpdated: Date;
   pinned: boolean;
 }
+
+export interface FontAwesomeIconButton {
+  class?: string;
+  text?: string;
+  icon: string;
+}

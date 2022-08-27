@@ -1,7 +1,7 @@
 <template>
-  <div class="circle hover hover-circle-btn">
+  <button class="hover-circle-btn">
     <i :class="['fa-solid', icon]" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -17,16 +17,18 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-i {
-  font-size: 1.9em;
-  @include absolute-center();
-}
-
-.circle {
+.hover-circle-btn {
   @include circle(50px);
   position: relative;
+  background-color: #00000000;
   &:hover {
     background-color: $gray1;
+    scale: 1;
+  }
+  i {
+    color: black;
+    font-size: 1.9em;
+    @include absolute-center();
   }
 }
 </style>

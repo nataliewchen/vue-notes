@@ -4,6 +4,7 @@
     <label for="query" hidden>Search:</label>
     <input type="text" id="query" v-model="query" placeholder="Search" />
     <HoverCircleButton
+      data-test="clear-search"
       class="clear-search"
       icon="fa-xmark"
       @click="clearSearch"
@@ -15,6 +16,8 @@
 <script>
 import { defineComponent } from "vue";
 import HoverCircleButton from "./HoverCircleButton.vue";
+
+console.log(document.querySelector("button"));
 
 export default defineComponent({
   name: "SearchBar",
@@ -49,10 +52,17 @@ export default defineComponent({
   position: relative;
 }
 
+#query {
+  padding-left: 35px;
+}
 .clear-search {
   position: absolute;
   right: 0px;
   scale: 0.6;
+
+  &:hover {
+    scale: 0.6;
+  }
 
   @include mq(tablet) {
     right: 40px;
@@ -60,10 +70,12 @@ export default defineComponent({
 }
 
 .fa-search {
+  @include absolute-center();
+  left: 60px;
+
   @include mq(mobile) {
     display: none;
   }
-  margin-right: 8px;
 }
 </style>
 

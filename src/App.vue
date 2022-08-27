@@ -69,7 +69,7 @@ body {
       background-color: $gray5;
     }
 
-    .circle:hover {
+    .hover-circle-btn:hover {
       background-color: $gray3;
     }
 
@@ -84,6 +84,10 @@ body {
       background-color: black;
       color: white;
       border-color: white;
+    }
+
+    i {
+      color: white;
     }
   }
 }
