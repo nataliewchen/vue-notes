@@ -109,15 +109,31 @@ export default defineComponent({
     };
   },
   created() {
-    const note = this.notes.find(
-      (note: Note) => note.id === Number(this.$route.params.id)
-    );
-    if (note) {
-      this.note = note;
+    if (!this.notes.length) {
+      // not passed in through props
+      const localNotes = localStorage.getItem("notes");
+      if (typeof localNotes === "string") {
+        const parsed = JSON.parse(localNotes);
+        let noteFromLocalStorage = parsed.find(
+          (note: Note) => note.id === Number(this.$route.params.id)
+        ); // set note from localStorage if no notes from props
+
+        if (noteFromLocalStorage) {
+          this.note = noteFromLocalStorage;
+        } else {
+          this.$router.push("/");
+        }
+      }
     } else {
-      // note not found, go back to home
-      // will trigger on page refresh since 'notes' prop won't get passed through
-      this.$router.push("/");
+      // notes passed through props
+      const noteFromProps = this.notes.find(
+        (note: Note) => note.id === Number(this.$route.params.id)
+      );
+      if (noteFromProps) {
+        this.note = noteFromProps;
+      } else {
+        this.$router.push("/");
+      }
     }
   },
   computed: {
