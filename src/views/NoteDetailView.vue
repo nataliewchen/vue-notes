@@ -69,9 +69,6 @@ export default defineComponent({
   emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
   data() {
     return {
-      // note: this.notes.find(
-      //   (note: Note) => note.id === Number(this.$route.params.id)
-      // ),
       note: {
         title: "",
         text: "",
@@ -118,6 +115,8 @@ export default defineComponent({
     if (note) {
       this.note = note;
     } else {
+      // note not found, go back to home
+      // will trigger on page refresh since 'notes' prop won't get passed through
       this.$router.push("/");
     }
   },
