@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import NotesHomeView from '../views/NotesHomeView.vue'
 import AddNoteView from '../views/AddNoteView.vue'
 import NoteDetailView from '../views/NoteDetailView.vue'
+
 const routes = [
   {
     path: '/',
@@ -15,7 +16,7 @@ const routes = [
       {
         path: ':id',
         component: NoteDetailView,
-      }
+      },
     ]
   },
 ]

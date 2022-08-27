@@ -6,15 +6,15 @@
 </template>
 
 
-<script>
-import { defineComponent } from "vue";
-import { FontAwesomeIconButton } from "../../types/custom-types.ts";
+<script lang="ts">
+import { defineComponent, PropType } from "vue";
+import { FontAwesomeIconButton } from "../../types/custom-types.js";
 
 export default defineComponent({
   name: "IconButton",
   props: {
     btn: {
-      type: FontAwesomeIconButton,
+      type: Object as PropType<FontAwesomeIconButton>,
       required: true,
     },
   },

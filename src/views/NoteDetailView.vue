@@ -112,16 +112,13 @@ export default defineComponent({
     };
   },
   created() {
-    console.log("created");
-    console.log(this.notes);
-    // this.$router.push("/");
-    // this.$router.push(this.$route.params.id.toString());
     const note = this.notes.find(
       (note: Note) => note.id === Number(this.$route.params.id)
     );
     if (note) {
-      console.log(note);
       this.note = note;
+    } else {
+      this.$router.push("/");
     }
   },
   computed: {
@@ -130,6 +127,10 @@ export default defineComponent({
     },
   },
   methods: {
+    backToEditing() {
+      this.showDeleteModal = false;
+      this.showExitModal = false;
+    },
     confirmClose() {
       if (this.isEditing) {
         this.showExitModal = true; // ask user if they want to exit without saving
@@ -147,17 +148,6 @@ export default defineComponent({
         this.$router.push("/");
       }
     },
-    editNote(newNote: Note) {
-      const pinned = this.note?.pinned;
-      this.$emit("edit-note", { ...newNote, pinned: this.note?.pinned });
-      this.$router.push("/");
-    },
-    submitForm() {
-      (document.querySelector(".submit-form") as HTMLElement).click();
-    },
-    toggleEditing() {
-      this.isEditing = !this.isEditing;
-    },
     confirmDelete() {
       this.showDeleteModal = true;
     },
@@ -165,16 +155,22 @@ export default defineComponent({
       this.$emit("delete-note", this.note?.id);
       this.$router.push("/");
     },
-    backToEditing() {
-      this.showDeleteModal = false;
-      this.showExitModal = false;
-    },
     discardChanges() {
+      this.$router.push("/");
+    },
+    editNote(newNote: Note) {
+      this.$emit("edit-note", { ...newNote, pinned: this.note?.pinned });
       this.$router.push("/");
     },
     focusInput(e: Event) {
       (e.target as HTMLElement).focus();
       this.isEditing = true;
+    },
+    submitForm() {
+      (document.querySelector(".submit-form") as HTMLElement).click();
+    },
+    toggleEditing() {
+      this.isEditing = !this.isEditing;
     },
   },
   watch: {
@@ -189,7 +185,6 @@ export default defineComponent({
       }
     },
     notes(newNotes) {
-      console.log("notes changed");
       // detect updates from note 'database' and update data to refresh UI
       const note = newNotes.find((note: Note) => note.id === this.note?.id);
       if (note) {
