@@ -8,7 +8,7 @@ describe('Delete Note', () => {
     cy.get('#text').type('sample note text')
     cy.get('form').submit()
 
-    cy.get('.note').click()
+    cy.get('.note-item').click()
     cy.contains('delete').click()
     cy.contains('Delete').click()
 

@@ -10,7 +10,7 @@ describe('Edit Note', () => {
  
 
 
-    cy.get('.note').click()
+    cy.get('.note-item').click()
     
     cy.get('.btn-header').should('be.visible')
     cy.get('.fa-pencil').click()
