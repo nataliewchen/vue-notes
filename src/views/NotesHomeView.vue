@@ -1,7 +1,7 @@
 <template>
   <AppHeader :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" />
-  <SearchBar @query-change="searchNotes" />
-  <NotesList :notes="notes" :filteredNotes="filteredNotes" />
+  <SearchBar @query-change="setQuery" />
+  <NotesList :notes="notes" :query="query" />
   <router-view
     :notes="notes"
     @add-note="addNote"
@@ -24,8 +24,8 @@ export default defineComponent({
   data() {
     return {
       notes: [] as Note[],
-      filteredNotes: [] as Note[],
       darkMode: false,
+      query: "",
     };
   },
   methods: {
@@ -41,17 +41,8 @@ export default defineComponent({
         ...this.notes.filter((note) => note.id !== editedNote.id), // most recently updated first
       ];
     },
-    searchNotes(query: string) {
-      if (!query) {
-        this.filteredNotes = this.notes; // show all notes
-      } else {
-        const filtered = this.notes.filter(
-          (note: Note) =>
-            note.title.toLowerCase().includes(query.toLowerCase()) ||
-            note.text.toLowerCase().includes(query.toLowerCase())
-        );
-        this.filteredNotes = filtered;
-      }
+    setQuery(query: string) {
+      this.query = query.toLowerCase();
     },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
@@ -73,7 +64,6 @@ export default defineComponent({
     },
     notes(newNotes) {
       localStorage.setItem("notes", JSON.stringify(newNotes));
-      this.filteredNotes = newNotes;
     },
   },
   mounted() {
@@ -81,7 +71,6 @@ export default defineComponent({
     const localDarkMode = localStorage.getItem("darkMode");
     if (localNotes) {
       this.notes = JSON.parse(localNotes);
-      this.filteredNotes = JSON.parse(localNotes);
     }
     if (localDarkMode && localDarkMode === "true") {
       this.darkMode = true;
