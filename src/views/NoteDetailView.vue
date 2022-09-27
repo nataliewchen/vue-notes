@@ -150,16 +150,6 @@ export default defineComponent({
       if (this.isEditing) {
         this.showExitModal = true; // ask user if they want to exit without saving
       } else {
-        // user made changes and shallow "saved" them (inputs are read-only but state hasn't been updated yet)
-        // only submit form if the content is actually different (otherwise lastUpdated will still be updated)
-        if (
-          (document.querySelector("#title") as HTMLInputElement).value !==
-            this.note?.title ||
-          (document.querySelector("#text") as HTMLTextAreaElement).value !==
-            this.note?.text
-        ) {
-          this.submitForm();
-        }
         this.$router.push("/");
       }
     },
@@ -175,16 +165,27 @@ export default defineComponent({
     },
     editNote(newNote: Note) {
       this.$emit("edit-note", { ...newNote, pinned: this.note?.pinned });
-      this.$router.push("/");
     },
     focusInput(e: Event) {
       (e.target as HTMLElement).focus();
       this.isEditing = true;
     },
     submitForm() {
-      (document.querySelector(".submit-form") as HTMLElement).click();
+      if (
+        // title and/or text actually changed
+        (document.querySelector("#title") as HTMLInputElement).value !==
+          this.note?.title ||
+        (document.querySelector("#text") as HTMLTextAreaElement).value !==
+          this.note?.text
+      ) {
+        (document.querySelector(".submit-form") as HTMLElement).click();
+      }
     },
     toggleEditing() {
+      if (this.isEditing) {
+        // save changes
+        this.submitForm();
+      }
       this.isEditing = !this.isEditing;
     },
   },
