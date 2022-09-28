@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { reactive, defineComponent } from "vue";
 import AppHeader from "../components/AppHeader.vue";
 import NotesList from "../components/NotesList.vue";
 import SearchBar from "../components/SearchBar.vue";

@@ -3,9 +3,9 @@
     <header>
       <div class="btn-header btn-group">
         <IconButton
-          :btn="note.pinned ? buttons.unpin : buttons.pin"
+          :btn="noteData.pinned ? buttons.unpin : buttons.pin"
           @click.stop="togglePin"
-          :class="note.pinned ? 'btn-orange' : ''"
+          :class="noteData.pinned ? 'btn-orange' : ''"
         />
         <IconButton
           :btn="isEditing ? buttons.save : buttons.edit"
@@ -16,8 +16,7 @@
       <div class="last-updated">last updated: {{ lastUpdated }}</div>
     </header>
     <NoteForm
-      v-if="note"
-      :noteData="note"
+      :noteData="noteData"
       :isEditing="isEditing"
       @focus-input="focusInput"
     />
@@ -49,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, watch, toRefs, PropType } from "vue";
 import dayjs from "dayjs";
 import ContentModal from "../components/ContentModal.vue";
 import IconButton from "../components/buttons/IconButton.vue";
@@ -60,10 +59,9 @@ import { notes } from "../notes";
 export default defineComponent({
   name: "NoteDetailView",
   components: { ContentModal, IconButton, NoteForm },
-  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
+  emits: [],
   data() {
     return {
-      notes,
       note: {
         title: "",
         text: "",
@@ -107,16 +105,30 @@ export default defineComponent({
     if (!notes.list.length) {
       notes.getLocalStorageNotes();
     }
-    const note = notes.list.find(
-      (note: Note) => note.id === Number(this.$route.params.id)
-    );
-    if (note) {
-      this.note = note;
+    if (
+      !notes.list
+        .map((note: Note) => note.id)
+        .includes(Number(this.$route.params.id))
+    ) {
+      // id/note does not exist in list
+      this.$router.push("/");
     }
   },
   computed: {
+    noteData() {
+      const note = notes.list.find(
+        (note: Note) => note.id === Number(this.$route.params.id)
+      );
+      return {
+        title: note?.title,
+        text: note?.text,
+        id: note?.id,
+        lastUpdated: note?.lastUpdated,
+        pinned: note?.pinned,
+      };
+    },
     lastUpdated() {
-      return dayjs(this.note?.lastUpdated).format("M/DD/YY hh:mm a");
+      return dayjs(this.note.lastUpdated).format("M/DD/YY hh:mm a");
     },
   },
   methods: {
@@ -135,7 +147,7 @@ export default defineComponent({
       this.showDeleteModal = true;
     },
     deleteNote() {
-      notes.deleteNote(this.note.id);
+      notes.deleteNote(Number(this.$route.params.id));
       this.$router.push("/");
     },
     discardChanges() {
@@ -164,7 +176,7 @@ export default defineComponent({
       this.isEditing = !this.isEditing;
     },
     togglePin() {
-      notes.togglePin(this.note.id);
+      notes.togglePin(Number(this.$route.params.id));
     },
   },
   watch: {
