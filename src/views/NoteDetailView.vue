@@ -4,7 +4,7 @@
       <div class="btn-header btn-group">
         <IconButton
           :btn="note.pinned ? buttons.unpin : buttons.pin"
-          @click.stop="$emit('toggle-pin', note.id)"
+          @click.stop="togglePin"
           :class="note.pinned ? 'btn-orange' : ''"
         />
         <IconButton
@@ -19,7 +19,6 @@
       v-if="note"
       :noteData="note"
       :isEditing="isEditing"
-      @handle-form="editNote"
       @focus-input="focusInput"
     />
   </ContentModal>
@@ -56,19 +55,15 @@ import ContentModal from "../components/ContentModal.vue";
 import IconButton from "../components/buttons/IconButton.vue";
 import NoteForm from "../components/NoteForm.vue";
 import { Note } from "../types/custom-types.js";
+import { notes } from "../notes";
 
 export default defineComponent({
   name: "NoteDetailView",
   components: { ContentModal, IconButton, NoteForm },
-  props: {
-    notes: {
-      type: Object as PropType<Note[]>,
-      required: true,
-    },
-  },
   emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
   data() {
     return {
+      notes,
       note: {
         title: "",
         text: "",
@@ -109,31 +104,14 @@ export default defineComponent({
     };
   },
   created() {
-    if (!this.notes.length) {
-      // not passed in through props
-      const localNotes = localStorage.getItem("notes");
-      if (typeof localNotes === "string") {
-        const parsed = JSON.parse(localNotes);
-        let noteFromLocalStorage = parsed.find(
-          (note: Note) => note.id === Number(this.$route.params.id)
-        ); // set note from localStorage if no notes from props
-
-        if (noteFromLocalStorage) {
-          this.note = noteFromLocalStorage;
-        } else {
-          this.$router.push("/");
-        }
-      }
-    } else {
-      // notes passed through props
-      const noteFromProps = this.notes.find(
-        (note: Note) => note.id === Number(this.$route.params.id)
-      );
-      if (noteFromProps) {
-        this.note = noteFromProps;
-      } else {
-        this.$router.push("/");
-      }
+    if (!notes.list.length) {
+      notes.getLocalStorageNotes();
+    }
+    const note = notes.list.find(
+      (note: Note) => note.id === Number(this.$route.params.id)
+    );
+    if (note) {
+      this.note = note;
     }
   },
   computed: {
@@ -157,14 +135,11 @@ export default defineComponent({
       this.showDeleteModal = true;
     },
     deleteNote() {
-      this.$emit("delete-note", this.note?.id);
+      notes.deleteNote(this.note.id);
       this.$router.push("/");
     },
     discardChanges() {
       this.$router.push("/");
-    },
-    editNote(newNote: Note) {
-      this.$emit("edit-note", { ...newNote, pinned: this.note?.pinned });
     },
     focusInput(e: Event) {
       (e.target as HTMLElement).focus();
@@ -188,6 +163,9 @@ export default defineComponent({
       }
       this.isEditing = !this.isEditing;
     },
+    togglePin() {
+      notes.togglePin(this.note.id);
+    },
   },
   watch: {
     editable(newEditable) {
@@ -198,13 +176,6 @@ export default defineComponent({
             text.focus();
           }, 0);
         }
-      }
-    },
-    notes(newNotes) {
-      // detect updates from note 'database' and update data to refresh UI
-      const note = newNotes.find((note: Note) => note.id === this.note?.id);
-      if (note) {
-        this.note = note;
       }
     },
   },

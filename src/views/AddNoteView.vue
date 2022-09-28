@@ -1,6 +1,6 @@
 <template>
   <ContentModal @backdrop-click="confirmClose" :closeOnBackdropClick="false">
-    <NoteForm @handle-form="addNote" />
+    <NoteForm />
   </ContentModal>
   <ContentModal
     v-show="showExitModal"
@@ -20,25 +20,16 @@
 import { defineComponent, PropType } from "vue";
 import NoteForm from "../components/NoteForm.vue";
 import ContentModal from "../components/ContentModal.vue";
-import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
   name: "AddNoteView",
   components: { NoteForm, ContentModal },
-  props: {
-    notes: Array as PropType<Note[]>,
-  },
-  emits: ["add-note", "toggle-pin", "edit-note", "delete-note"],
   data() {
     return {
       showExitModal: false,
     };
   },
   methods: {
-    addNote(newNote: Note) {
-      this.$emit("add-note", newNote);
-      this.$router.push("/");
-    },
     backToAddForm() {
       this.showExitModal = false;
     },

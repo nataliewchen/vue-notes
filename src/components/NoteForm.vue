@@ -36,6 +36,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
+import { notes } from "../notes";
 import { Note } from "../types/custom-types.js";
 
 export default defineComponent({
@@ -56,15 +57,23 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      const newNote = {
+      const newNote: Note = {
         title: this.title,
         text: this.text,
-        id: this.existingNote ? this.id : Date.now(), // keep same id if editing existing note
+        id: this.existingNote ? Number(this.id) : Date.now(), // keep same id if editing existing note
         lastUpdated: new Date(),
         pinned: this.pinned,
       };
 
-      this.$emit("handle-form", newNote);
+      if (!this.existingNote) {
+        //add new note
+        notes.addNote(newNote);
+      } else {
+        // edit existing note
+        notes.editNote(newNote);
+      }
+
+      this.$router.push(`${newNote.id}`);
     },
     focus(e: Event) {
       this.$emit("focus-input", e);
