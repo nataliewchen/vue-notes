@@ -2,7 +2,9 @@
   <div class="notes-list">
     <div class="no-notes">
       {{
-        filteredNotes.length === 0 && notes.length > 0 ? "no notes found" : ""
+        filteredNotes.length === 0 && notes.list.length > 0
+          ? "no notes found"
+          : ""
       }}
     </div>
     <NoteItem v-for="note in pinnedNotes" :key="note.id" :note="note" />
@@ -12,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent } from "vue";
 import NoteItem from "./NoteItem.vue";
 import { notes } from "../notes";
 import { Note } from "../types/custom-types.js";

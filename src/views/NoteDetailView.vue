@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, toRefs, PropType } from "vue";
+import { defineComponent } from "vue";
 import dayjs from "dayjs";
 import ContentModal from "../components/ContentModal.vue";
 import IconButton from "../components/buttons/IconButton.vue";
@@ -62,13 +62,6 @@ export default defineComponent({
   emits: [],
   data() {
     return {
-      note: {
-        title: "",
-        text: "",
-        id: 0,
-        lastUpdated: new Date(),
-        pinned: false,
-      },
       isEditing: false,
       showDeleteModal: false,
       showExitModal: false,
@@ -119,16 +112,14 @@ export default defineComponent({
       const note = notes.list.find(
         (note: Note) => note.id === Number(this.$route.params.id)
       );
-      return {
-        title: note?.title,
-        text: note?.text,
-        id: note?.id,
-        lastUpdated: note?.lastUpdated,
-        pinned: note?.pinned,
-      };
+      return note;
     },
     lastUpdated() {
-      return dayjs(this.note.lastUpdated).format("M/DD/YY hh:mm a");
+      if (this.noteData) {
+        return dayjs(this.noteData.lastUpdated).format("M/DD/YY hh:mm a");
+      } else {
+        return "";
+      }
     },
   },
   methods: {
@@ -161,9 +152,9 @@ export default defineComponent({
       if (
         // title and/or text actually changed
         (document.querySelector("#title") as HTMLInputElement).value !==
-          this.note?.title ||
+          this.noteData?.title ||
         (document.querySelector("#text") as HTMLTextAreaElement).value !==
-          this.note?.text
+          this.noteData?.text
       ) {
         (document.querySelector(".submit-form") as HTMLElement).click();
       }

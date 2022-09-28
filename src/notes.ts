@@ -1,4 +1,4 @@
-import { reactive, watch, PropType} from 'vue';
+import { reactive, watch } from 'vue';
 import { Note } from "./types/custom-types.js";
 
 export const notes = reactive({
@@ -35,7 +35,7 @@ export const notes = reactive({
 
 watch(
   () => notes.list,
-  (list, prevList) => {
+  () => {
     notes.setLocalStorageNotes();
   }
 )

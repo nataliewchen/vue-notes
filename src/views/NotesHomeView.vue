@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import AppHeader from "../components/AppHeader.vue";
 import NotesList from "../components/NotesList.vue";
 import SearchBar from "../components/SearchBar.vue";
@@ -39,7 +39,6 @@ export default defineComponent({
     },
   },
   mounted() {
-    const localNotes = localStorage.getItem("notes");
     const localDarkMode = localStorage.getItem("darkMode");
     if (localDarkMode && localDarkMode === "true") {
       this.darkMode = true;

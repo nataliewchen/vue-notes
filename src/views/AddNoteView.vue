@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent } from "vue";
 import NoteForm from "../components/NoteForm.vue";
 import ContentModal from "../components/ContentModal.vue";
 
