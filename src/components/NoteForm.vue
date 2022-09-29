@@ -66,11 +66,9 @@ export default defineComponent({
       };
 
       if (!this.existingNote) {
-        //add new note
-        notes.addNote(newNote);
+        notes.addNote(newNote); //add new note
       } else {
-        // edit existing note
-        notes.editNote(newNote);
+        notes.editNote(newNote); // edit existing note
       }
 
       this.$router.push(`${newNote.id}`);

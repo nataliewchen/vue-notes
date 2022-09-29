@@ -1,10 +1,14 @@
 <template>
   <div
     :class="[transparent ? 'transparent' : '', 'backdrop']"
-    @click="onBackdropClick"
+    @mousedown="onBackdropClick"
     v-show="showModal"
   >
-    <div :class="['modal', small ? 'modal-sm' : '']" @click.stop="">
+    <div
+      :class="['modal', small ? 'modal-sm' : '']"
+      @click.stop=""
+      @mousedown.stop=""
+    >
       <HoverCircleButton
         class="close-form"
         icon="fa-xmark"
